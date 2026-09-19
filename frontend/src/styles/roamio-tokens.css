@@ -1,0 +1,486 @@
+/**
+ * ==============================================================================
+ * ROAMIO DESIGN SYSTEM TOKENS
+ * ==============================================================================
+ * Source of truth for all Roamio design tokens:
+ * - Colors (Background, Text, Borders, Semantic, Primary, Accent Secondary)
+ * - Typography (Font Families, Headings H1-H6, Body / UI tokens)
+ * - Spacing (Scale 0-10)
+ * - Radius (None, 1-4, Full)
+ * - Effects / Elevation (Drop shadows: Small, Medium, Large, Extra Large, Zero)
+ * - Stroke / Border Width (Stroke 0, 1, 2)
+ * - Desktop Grid (12 Columns, 16px Margins, 16px Gutter)
+ * 
+ * Note: Sunken, Glow, and Effects Placeholder remain intentionally UNSPECIFIED.
+ * ==============================================================================
+ */
+
+:root {
+  /* ==========================================================================
+     1. COLORS
+     ========================================================================== */
+
+  /* BACKGROUND */
+  --roamio-bg-app: #FFFFFF;
+  --roamio-bg-card: #FFFFFF;
+  --roamio-bg-secondary: #F8F6F0;
+
+  /* TEXT */
+  --roamio-text-primary: #1C2420;
+  --roamio-text-secondary: #5B6660;
+  --roamio-text-tertiary: #949494;
+  --roamio-text-disabled: #BDBDBD;
+  --roamio-text-inverse: #F8F6F0;
+  --roamio-text-highlight: #164A3A;
+
+  /* BORDERS */
+  --roamio-border-light: #DEDEDE;
+  --roamio-border-default: #C0C0C0;
+  --roamio-border-strong: #9b9b9b;
+  --roamio-divider: #E5E7EB;
+
+  /* SEMANTIC COLORS */
+  --roamio-semantic-success: #2F9E6F;
+  --roamio-semantic-warning: #F59E0B;
+  --roamio-semantic-danger: #DC2626;
+  --roamio-semantic-info: #3C9CA8;
+
+  --roamio-semantic-success-bg: #EFFAF5;
+  --roamio-semantic-warning-bg: #FFF8EB;
+  --roamio-semantic-danger-bg: #FEF2F2;
+  --roamio-semantic-info-bg: #EEF8FA;
+
+  /* PRIMARY ACCENT */
+  --roamio-primary-accent: #164A3A;
+  --roamio-primary-accent-hover: #0E3227;
+
+  /* LIGHT BUTTON */
+  --roamio-btn-light: #46B392;
+  --roamio-btn-light-hover: #3AA182;
+
+  /* ACCENT SECONDARY */
+  --roamio-accent-secondary: #EBBA58;
+  --roamio-accent-secondary-10: rgb(235 186 88 / 0.1);
+  --roamio-accent-secondary-light: rgb(235 186 88 / 0.1);
+  --color-secondary-accent-light: rgb(235 186 88 / 0.1);
+  --roamio-accent-secondary-50: rgba(235, 186, 88, 0.50);
+
+  /* ==========================================================================
+     2. TYPOGRAPHY
+     ========================================================================== */
+
+  /* FONT FAMILIES */
+  --roamio-font-display: 'Fraunces', Georgia, serif;
+  --roamio-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* HEADINGS */
+  /* H-1 */
+  --roamio-h1-font-family: var(--roamio-font-display);
+  --roamio-h1-font-size: 64px;
+  --roamio-h1-line-height: 80px;
+  --roamio-h1-letter-spacing: 0px;
+  --roamio-h1-font-weight: 700;
+
+  /* H-2 */
+  --roamio-h2-font-family: var(--roamio-font-display);
+  --roamio-h2-font-size: 40px;
+  --roamio-h2-line-height: 52px;
+  --roamio-h2-letter-spacing: 0px;
+  --roamio-h2-font-weight: 600;
+
+  /* H-3 */
+  --roamio-h3-font-family: var(--roamio-font-display);
+  --roamio-h3-font-size: 32px;
+  --roamio-h3-line-height: 42px;
+  --roamio-h3-letter-spacing: 0px;
+  --roamio-h3-font-weight: 600;
+
+  /* H-4 */
+  --roamio-h4-font-family: var(--roamio-font-body);
+  --roamio-h4-font-size: 24px;
+  --roamio-h4-line-height: 32px;
+  --roamio-h4-letter-spacing: 0px;
+  --roamio-h4-font-weight: 600;
+
+  /* H-5 */
+  --roamio-h5-font-family: var(--roamio-font-body);
+  --roamio-h5-font-size: 20px;
+  --roamio-h5-line-height: 28px;
+  --roamio-h5-letter-spacing: 0px;
+  --roamio-h5-font-weight: 600;
+
+  /* H-6 */
+  --roamio-h6-font-family: var(--roamio-font-body);
+  --roamio-h6-font-size: 16px;
+  --roamio-h6-line-height: 24px;
+  --roamio-h6-letter-spacing: 0px;
+  --roamio-h6-font-weight: 600;
+
+  /* BODY / UI */
+  /* Body Large */
+  --roamio-body-lg-font-family: var(--roamio-font-body);
+  --roamio-body-lg-font-size: 18px;
+  --roamio-body-lg-line-height: 24px;
+  --roamio-body-lg-letter-spacing: 0px;
+  --roamio-body-lg-font-weight: 400;
+
+  /* Body Large Semibold */
+  --roamio-body-lg-semibold-font-family: var(--roamio-font-body);
+  --roamio-body-lg-semibold-font-size: 18px;
+  --roamio-body-lg-semibold-line-height: 24px;
+  --roamio-body-lg-semibold-letter-spacing: 0px;
+  --roamio-body-lg-semibold-font-weight: 600;
+
+  /* Body md */
+  --roamio-body-md-font-family: var(--roamio-font-body);
+  --roamio-body-md-font-size: 16px;
+  --roamio-body-md-line-height: 22px;
+  --roamio-body-md-letter-spacing: 0px;
+  --roamio-body-md-font-weight: 400;
+
+  /* Label / Button (Semantic token) */
+  --roamio-label-btn-font-family: var(--roamio-font-body);
+  --roamio-label-btn-font-size: 16px;
+  --roamio-label-btn-line-height: 22px;
+  --roamio-label-btn-letter-spacing: 0px;
+  --roamio-label-btn-font-weight: 500;
+
+  /* Body md medium (Separate semantic token) */
+  --roamio-body-md-medium-font-family: var(--roamio-font-body);
+  --roamio-body-md-medium-font-size: 16px;
+  --roamio-body-md-medium-line-height: 22px;
+  --roamio-body-md-medium-letter-spacing: 0px;
+  --roamio-body-md-medium-font-weight: 500;
+
+  /* Body sm */
+  --roamio-body-sm-font-family: var(--roamio-font-body);
+  --roamio-body-sm-font-size: 14px;
+  --roamio-body-sm-line-height: 20px;
+  --roamio-body-sm-letter-spacing: 0px;
+  --roamio-body-sm-font-weight: 400;
+
+  /* Body sm Medium */
+  --roamio-body-sm-medium-font-family: var(--roamio-font-body);
+  --roamio-body-sm-medium-font-size: 14px;
+  --roamio-body-sm-medium-line-height: 20px;
+  --roamio-body-sm-medium-letter-spacing: 0px;
+  --roamio-body-sm-medium-font-weight: 500;
+
+  /* Body xs */
+  --roamio-body-xs-font-family: var(--roamio-font-body);
+  --roamio-body-xs-font-size: 12px;
+  --roamio-body-xs-line-height: 16px;
+  --roamio-body-xs-letter-spacing: 0px;
+  --roamio-body-xs-font-weight: 500;
+
+  /* Caption small */
+  --roamio-caption-sm-font-family: var(--roamio-font-body);
+  --roamio-caption-sm-font-size: 10px;
+  --roamio-caption-sm-line-height: 16px;
+  --roamio-caption-sm-letter-spacing: 0px;
+  --roamio-caption-sm-font-weight: 400;
+
+  /* ==========================================================================
+     3. SPACING
+     ========================================================================== */
+  --roamio-spacing-0: 0px;
+  --roamio-spacing-1: 4px;
+  --roamio-spacing-2: 8px;
+  --roamio-spacing-3: 12px;
+  --roamio-spacing-4: 16px;
+  --roamio-spacing-5: 20px;
+  --roamio-spacing-6: 24px;
+  --roamio-spacing-7: 32px;
+  --roamio-spacing-8: 40px;
+  --roamio-spacing-9: 48px;
+  --roamio-spacing-10: 64px;
+
+  /* ==========================================================================
+     4. RADIUS
+     ========================================================================== */
+  --roamio-radius-none: 0px;
+  --roamio-radius-1: 4px;
+  --roamio-radius-2: 8px;
+  --roamio-radius-3: 12px;
+  --roamio-radius-4: 16px;
+  --roamio-radius-full: 9999px;
+
+  /* ==========================================================================
+     5. EFFECTS / ELEVATION (All Drop Shadows)
+     ========================================================================== */
+  /* Small: X=0px Y=1px Blur=3px Spread=0px Color=#111827 Opacity=8% */
+  --roamio-shadow-small: 0px 1px 3px 0px rgba(17, 24, 39, 0.08);
+
+  /* Medium: X=0px Y=4px Blur=12px Spread=0px Color=#111827 Opacity=8% */
+  --roamio-shadow-medium: 0px 4px 12px 0px rgba(17, 24, 39, 0.08);
+
+  /* Large: X=0px Y=8px Blur=24px Spread=0px Color=#111827 Opacity=12% */
+  --roamio-shadow-large: 0px 8px 24px 0px rgba(17, 24, 39, 0.12);
+
+  /* Extra Large: X=0px Y=20px Blur=40px Spread=0px Color=#111827 Opacity=16% */
+  --roamio-shadow-extra-large: 0px 20px 40px 0px rgba(17, 24, 39, 0.16);
+
+  /* Zero: X=0px Y=0px Blur=0px Spread=0px Color=#1B1C1D Opacity=0% */
+  --roamio-shadow-zero: 0px 0px 0px 0px rgba(27, 28, 29, 0);
+
+  /* Unspecified tokens: Sunken, Glow, Effects Placeholder */
+  /* Intentionally omitted to respect design system specification */
+
+  /* ==========================================================================
+     6. STROKE / BORDER WIDTH
+     ========================================================================== */
+  --roamio-stroke-0: 0px;
+  --roamio-stroke-1: 1px;
+  --roamio-stroke-2: 2px;
+  --roamio-stroke-default: 1px;
+
+  /* ==========================================================================
+     7. DESKTOP GRID
+     ========================================================================== */
+  --roamio-grid-columns: 12;
+  --roamio-grid-margin: 16px;
+  --roamio-grid-gutter: 16px;
+}
+
+/* ==============================================================================
+   ROAMIO TYPOGRAPHY UTILITY CLASSES
+   ============================================================================== */
+
+.roamio-h1 {
+  font-family: var(--roamio-h1-font-family);
+  font-size: var(--roamio-h1-font-size);
+  line-height: var(--roamio-h1-line-height);
+  letter-spacing: var(--roamio-h1-letter-spacing);
+  font-weight: var(--roamio-h1-font-weight);
+}
+
+.roamio-h2 {
+  font-family: var(--roamio-h2-font-family);
+  font-size: var(--roamio-h2-font-size);
+  line-height: var(--roamio-h2-line-height);
+  letter-spacing: var(--roamio-h2-letter-spacing);
+  font-weight: var(--roamio-h2-font-weight);
+}
+
+.roamio-h3 {
+  font-family: var(--roamio-h3-font-family);
+  font-size: var(--roamio-h3-font-size);
+  line-height: var(--roamio-h3-line-height);
+  letter-spacing: var(--roamio-h3-letter-spacing);
+  font-weight: var(--roamio-h3-font-weight);
+}
+
+.roamio-h4 {
+  font-family: var(--roamio-h4-font-family);
+  font-size: var(--roamio-h4-font-size);
+  line-height: var(--roamio-h4-line-height);
+  letter-spacing: var(--roamio-h4-letter-spacing);
+  font-weight: var(--roamio-h4-font-weight);
+}
+
+.roamio-h5 {
+  font-family: var(--roamio-h5-font-family);
+  font-size: var(--roamio-h5-font-size);
+  line-height: var(--roamio-h5-line-height);
+  letter-spacing: var(--roamio-h5-letter-spacing);
+  font-weight: var(--roamio-h5-font-weight);
+}
+
+.roamio-h6 {
+  font-family: var(--roamio-h6-font-family);
+  font-size: var(--roamio-h6-font-size);
+  line-height: var(--roamio-h6-line-height);
+  letter-spacing: var(--roamio-h6-letter-spacing);
+  font-weight: var(--roamio-h6-font-weight);
+}
+
+.roamio-body-lg {
+  font-family: var(--roamio-body-lg-font-family);
+  font-size: var(--roamio-body-lg-font-size);
+  line-height: var(--roamio-body-lg-line-height);
+  letter-spacing: var(--roamio-body-lg-letter-spacing);
+  font-weight: var(--roamio-body-lg-font-weight);
+}
+
+.roamio-body-lg-semibold {
+  font-family: var(--roamio-body-lg-semibold-font-family);
+  font-size: var(--roamio-body-lg-semibold-font-size);
+  line-height: var(--roamio-body-lg-semibold-line-height);
+  letter-spacing: var(--roamio-body-lg-semibold-letter-spacing);
+  font-weight: var(--roamio-body-lg-semibold-font-weight);
+}
+
+.roamio-body-md {
+  font-family: var(--roamio-body-md-font-family);
+  font-size: var(--roamio-body-md-font-size);
+  line-height: var(--roamio-body-md-line-height);
+  letter-spacing: var(--roamio-body-md-letter-spacing);
+  font-weight: var(--roamio-body-md-font-weight);
+}
+
+.roamio-label-btn {
+  font-family: var(--roamio-label-btn-font-family);
+  font-size: var(--roamio-label-btn-font-size);
+  line-height: var(--roamio-label-btn-line-height);
+  letter-spacing: var(--roamio-label-btn-letter-spacing);
+  font-weight: var(--roamio-label-btn-font-weight);
+}
+
+.roamio-body-md-medium {
+  font-family: var(--roamio-body-md-medium-font-family);
+  font-size: var(--roamio-body-md-medium-font-size);
+  line-height: var(--roamio-body-md-medium-line-height);
+  letter-spacing: var(--roamio-body-md-medium-letter-spacing);
+  font-weight: var(--roamio-body-md-medium-font-weight);
+}
+
+.roamio-body-sm {
+  font-family: var(--roamio-body-sm-font-family);
+  font-size: var(--roamio-body-sm-font-size);
+  line-height: var(--roamio-body-sm-line-height);
+  letter-spacing: var(--roamio-body-sm-letter-spacing);
+  font-weight: var(--roamio-body-sm-font-weight);
+}
+
+.roamio-body-sm-medium {
+  font-family: var(--roamio-body-sm-medium-font-family);
+  font-size: var(--roamio-body-sm-medium-font-size);
+  line-height: var(--roamio-body-sm-medium-line-height);
+  letter-spacing: var(--roamio-body-sm-medium-letter-spacing);
+  font-weight: var(--roamio-body-sm-medium-font-weight);
+}
+
+.roamio-body-xs {
+  font-family: var(--roamio-body-xs-font-family);
+  font-size: var(--roamio-body-xs-font-size);
+  line-height: var(--roamio-body-xs-line-height);
+  letter-spacing: var(--roamio-body-xs-letter-spacing);
+  font-weight: var(--roamio-body-xs-font-weight);
+}
+
+.roamio-caption-sm {
+  font-family: var(--roamio-caption-sm-font-family);
+  font-size: var(--roamio-caption-sm-font-size);
+  line-height: var(--roamio-caption-sm-line-height);
+  letter-spacing: var(--roamio-caption-sm-letter-spacing);
+  font-weight: var(--roamio-caption-sm-font-weight);
+}
+
+/* ==============================================================================
+   ROAMIO ELEVATION UTILITY CLASSES
+   ============================================================================== */
+
+.roamio-shadow-sm {
+  box-shadow: var(--roamio-shadow-small);
+}
+
+.roamio-shadow-md {
+  box-shadow: var(--roamio-shadow-medium);
+}
+
+.roamio-shadow-lg {
+  box-shadow: var(--roamio-shadow-large);
+}
+
+.roamio-shadow-xl {
+  box-shadow: var(--roamio-shadow-extra-large);
+}
+
+.roamio-shadow-zero {
+  box-shadow: var(--roamio-shadow-zero);
+}
+
+/* ==============================================================================
+   ROAMIO LIGHT BUTTON UTILITY CLASSES
+   ============================================================================== */
+
+.bg-roamio-btn-light,
+.roamio-bg-btn-light {
+  background-color: var(--roamio-btn-light);
+}
+
+.hover\:bg-roamio-btn-light-hover:hover {
+  background-color: var(--roamio-btn-light-hover);
+}
+
+.text-roamio-btn-light {
+  color: var(--roamio-btn-light);
+}
+
+.border-roamio-btn-light {
+  border-color: var(--roamio-btn-light);
+}
+
+/* ==============================================================================
+   ROAMIO SECONDARY ACCENT LIGHT / INPUT SURFACE UTILITY CLASSES
+   ============================================================================== */
+
+.bg-roamio-accent-secondary-10,
+.bg-roamio-secondary-light,
+.bg-color-secondary-accent-light,
+.roamio-input-surface {
+  background-color: rgb(235 186 88 / 0.1);
+}
+
+/* ==============================================================================
+   ROAMIO STROKE / BORDER UTILITY CLASSES
+   ============================================================================== */
+
+.roamio-border-0 {
+  border-width: var(--roamio-stroke-0);
+}
+
+.roamio-border-1 {
+  border-width: var(--roamio-stroke-1);
+}
+
+.roamio-border-2 {
+  border-width: var(--roamio-stroke-2);
+}
+
+/* ==============================================================================
+   ROAMIO RADIUS UTILITY CLASSES
+   ============================================================================== */
+
+.roamio-radius-none {
+  border-radius: var(--roamio-radius-none);
+}
+
+.roamio-radius-1 {
+  border-radius: var(--roamio-radius-1);
+}
+
+.roamio-radius-2 {
+  border-radius: var(--roamio-radius-2);
+}
+
+.roamio-radius-3 {
+  border-radius: var(--roamio-radius-3);
+}
+
+.roamio-radius-4 {
+  border-radius: var(--roamio-radius-4);
+}
+
+.roamio-radius-full {
+  border-radius: var(--roamio-radius-full);
+}
+
+/* ==============================================================================
+   ROAMIO DESKTOP GRID LAYOUT UTILITIES
+   ============================================================================== */
+
+.roamio-desktop-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--roamio-grid-columns), minmax(0, 1fr));
+  column-gap: var(--roamio-grid-gutter);
+  row-gap: var(--roamio-grid-gutter);
+  padding-left: var(--roamio-grid-margin);
+  padding-right: var(--roamio-grid-margin);
+}
+
+.roamio-container {
+  width: 100%;
+  padding-left: var(--roamio-grid-margin);
+  padding-right: var(--roamio-grid-margin);
+}
