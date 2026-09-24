@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { ArrowLeft, Bookmark, Plus, Search } from 'lucide-react';
-import roamioLogo from '../assets/images/roamio-logo.png';
+import roamioLogo from '../assets/images/Roamio-Logo.png';
 import ItineraryCard from '../components/ItineraryCard';
 
 export default function RoamioMyItinerariesPage({

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Compass, Bookmark, Bell, Share2, Sparkles, Search, Menu } from 'lucide-react';
-import roamioLogo from "../assets/images/roamio-logo.png";
+import roamioLogo from "../assets/images/Roamio-Logo.png";
 
 export default function Navbar({ currentPage, setCurrentPage, toggleSidebar, onOpenChat }) {
   return (

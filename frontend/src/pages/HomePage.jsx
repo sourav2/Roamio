@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Sparkles, SlidersHorizontal, Bookmark } from 'lucide-react';
-import roamioLogo from '../assets/images/roamio-logo.png';
+import roamioLogo from '../assets/images/Roamio-Logo.png';
 import { Button, SearchInput } from '../components/ui';
 import ManualPreferencesDrawer from '../components/ManualPreferencesDrawer';
 
