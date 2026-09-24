@@ -24,7 +24,7 @@ const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/
 export const geminiService = {
   /**
    * Natural Language Search -> FastAPI Backend -> Structured Roamio Filter Values
-   * Delegates preference extraction to the FastAPI backend running on http://localhost:8000
+   * Delegates preference extraction to the FastAPI backend (/api/search/extract-preferences)
    * which executes the LLM in Python with full context.
    */
   async extractPreferences(query) {
@@ -35,27 +35,13 @@ export const geminiService = {
     console.log(`[geminiService] Sending natural-language query to FastAPI backend: "${query}"`);
 
     try {
-      let response;
-      try {
-        // Direct call to FastAPI backend on localhost:8000
-        response = await fetch('http://localhost:8000/api/search/extract-preferences', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ query: query.trim() }),
-        });
-      } catch (directErr) {
-        console.warn("[geminiService] Direct fetch to http://localhost:8000 failed, trying relative proxy /api/search/extract-preferences:", directErr);
-        // Fallback to Vite proxy
-        response = await fetch('/api/search/extract-preferences', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ query: query.trim() }),
-        });
-      }
+      const response = await fetch('/api/search/extract-preferences', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query: query.trim() }),
+      });
 
       if (!response || !response.ok) {
         const errDetail = response ? await response.text() : 'No response';

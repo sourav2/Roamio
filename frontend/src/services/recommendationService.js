@@ -709,24 +709,12 @@ export async function fetchRecommendedDestinations(filters = {}) {
 
   console.log('[recommendationService] Fetching dynamic recommendations from backend with payload:', payload);
 
-  const backendBase = (typeof envConfig !== 'undefined' && envConfig.BACKEND_API_BASE) || 'http://localhost:8000';
-  let response;
-
   try {
-    try {
-      response = await fetch(`${backendBase}/api/search/recommendations`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-    } catch (directErr) {
-      console.warn('[recommendationService] Direct backend fetch failed, falling back to relative proxy /api/search/recommendations:', directErr);
-      response = await fetch('/api/search/recommendations', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-    }
+    const response = await fetch('/api/search/recommendations', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
 
     if (!response || !response.ok) {
       const errText = response ? await response.text() : 'No response';

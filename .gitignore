@@ -12,6 +12,14 @@ build/
 
 # Environment
 .env
+.env.*
+*.env
+.env.local
+.env.production
+.env.development
+
+# Vercel
+.vercel/
 
 # Logs
 *.log
@@ -24,3 +32,4 @@ build/
 
 # Runtime artifacts
 gemini_runtime_response.json
+*.json.cache

@@ -11,7 +11,7 @@ export const envConfig = {
   PEXELS_API_KEY: import.meta.env.VITE_PEXELS_API_KEY || '',
   MAPBOX_API_KEY: import.meta.env.VITE_MAPBOX_API_KEY || '',
   MAP_PROVIDER: import.meta.env.VITE_MAP_PROVIDER || 'osm',
-  BACKEND_API_BASE: import.meta.env.VITE_BACKEND_API_URL || 'http://localhost:8000',
+  BACKEND_API_BASE: import.meta.env.VITE_BACKEND_API_URL || '',
   
   // Validation status helper
   validate() {
