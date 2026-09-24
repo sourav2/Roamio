@@ -6,7 +6,7 @@ import HomePage from './pages/HomePage';
 import ResultsDashboardPage from './pages/ResultsDashboardPage';
 import DestinationDetailPage from './pages/DestinationDetailPage';
 import PlannerPage from './pages/PlannerPage';
-import SavedTripsPage from './pages/SavedTripsPage';
+import RoamioMyItinerariesPage from './pages/RoamioMyItinerariesPage';
 import PlaceDetailsPage from './pages/PlaceDetailsPage';
 import DeveloperTestPage from './pages/DeveloperTestPage';
 import { useLocalStorage } from './hooks/useLocalStorage';
@@ -17,6 +17,7 @@ import ChatInterface from './components/ChatInterface';
 import { Compass, X, MessageSquare } from 'lucide-react';
 import { DEFAULT_FILTER_STATE } from './config/filterConfig';
 import { geminiService } from './services/ai/geminiService';
+import { calculateItineraryTotals, calculateDynamicBudgetCategories } from './data/destinationsData';
 
 const MOCK_MEGHALAYA_TRIP = {
   id: 'meghalaya-default',
@@ -393,6 +394,7 @@ export default function App() {
   const [itineraryLoading, setItineraryLoading] = useState(false);
   const [itineraryError, setItineraryError] = useState(null);
   const [lastFormData, setLastFormData] = useState(null);
+  const [currentSavedItineraryId, setCurrentSavedItineraryId] = useState(null);
 
   // Shared Roamio Filter and Itinerary State (Single Source of Truth)
   const [sharedFilterState, setSharedFilterState] = useState(DEFAULT_FILTER_STATE);
@@ -632,14 +634,77 @@ export default function App() {
 
   // Save a generated itinerary to local storage
   const handleSaveTrip = (trip) => {
-    if (!trip) return;
-    // Check if already saved
-    if (savedTrips.some(t => t.id === trip.id)) return;
+    if (!trip || !trip.id || !trip.destination) return null;
+    const existingTrip = savedTrips.find((savedTrip) => savedTrip.id === trip.id);
+    const now = new Date().toISOString();
     const tripToSave = {
       ...trip,
-      selected_places: selectedPlaces
+      createdAt: existingTrip?.createdAt || trip.createdAt || now,
+      updatedAt: now,
+      selected_places: trip.selected_places || selectedPlaces
     };
-    setSavedTrips(prev => [tripToSave, ...prev]);
+    setSavedTrips((prev) => existingTrip
+      ? prev.map((savedTrip) => savedTrip.id === tripToSave.id ? tripToSave : savedTrip)
+      : [tripToSave, ...prev]
+    );
+    setCurrentSavedItineraryId(tripToSave.id);
+    return tripToSave;
+  };
+
+  const handleSavePlan = ({ destinationData = null, filters = sharedFilterState, destinationsByDay = sharedDestinationsByDay } = {}) => {
+    const destination = destinationData?.name || filters?.destination || activeTrip?.destination;
+    const origin = filters?.location || filters?.selectedLocation?.name || activeTrip?.start_location;
+    const dayEntries = Object.entries(destinationsByDay || {});
+    const plannedDays = dayEntries
+      .filter(([, places]) => Array.isArray(places) && places.length > 0)
+      .map(([day, places]) => ({ day: Number(day), places }));
+    const selectedPlanPlaces = dayEntries.flatMap(([day, places]) =>
+      (places || []).map((place) => ({ ...place, day: Number(day) }))
+    );
+
+    const resolvedDestination = destination || selectedPlanPlaces[0]?.name;
+    if (!resolvedDestination || (!activeTrip && selectedPlanPlaces.length === 0)) {
+      setItineraryError('Add a destination or planned place before saving your plan.');
+      return { success: false, message: 'Add a destination or planned place before saving your plan.' };
+    }
+
+    const totals = calculateItineraryTotals(destinationsByDay, filters?.travellerCount || activeTrip?.travelers || 1);
+    const budgetDetails = calculateDynamicBudgetCategories(destinationsByDay, filters?.travellerCount || activeTrip?.travelers || 1);
+    const route = [origin, ...selectedPlanPlaces.map((place) => place.name), resolvedDestination].filter(Boolean);
+    const uniqueRoute = route.filter((place, index) => index === 0 || place !== route[index - 1]);
+    const savedId = currentSavedItineraryId || (activeTrip?.destination === resolvedDestination ? activeTrip.id : null);
+    const now = new Date().toISOString();
+    const trip = {
+      ...(activeTrip || {}),
+      id: savedId || (typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2)),
+      title: activeTrip?.title || `${resolvedDestination} itinerary`,
+      destination: resolvedDestination,
+      start_location: origin || '',
+      route: uniqueRoute,
+      total_days: activeTrip?.total_days || filters?.duration || 1,
+      number_of_nights: Math.max(0, (activeTrip?.total_days || filters?.duration || 1) - 1),
+      travelers: activeTrip?.travelers || filters?.travellerCount || 1,
+      budget: activeTrip?.budget || filters?.budget || 0,
+      estimated_total_cost: budgetDetails.totalAmount || totals.totalCost,
+      itinerary_days: plannedDays,
+      destinations_by_day: destinationsByDay,
+      selected_places: selectedPlanPlaces,
+      transport_preference: activeTrip?.transport_preference || filters?.travelMode || 'Any',
+      travel_mode: filters?.travelMode || activeTrip?.transport_preference || 'Any',
+      travel_style: filters?.accommodationType || activeTrip?.comfort_level || '',
+      comfort_level: activeTrip?.comfort_level || filters?.accommodationType || '',
+      trip_type: filters?.selectedTripTypes || [],
+      budget_breakdown: budgetDetails,
+      createdAt: activeTrip?.createdAt || now,
+      updatedAt: now,
+      updated_at: now,
+      image_url: destinationData?.image || destinationData?.image_url || activeTrip?.image_url
+    };
+
+    const savedTrip = handleSaveTrip(trip);
+    setActiveTrip(savedTrip);
+    setItineraryError(null);
+    return { success: Boolean(savedTrip), itinerary: savedTrip };
   };
 
   // Delete a saved itinerary
@@ -650,11 +715,35 @@ export default function App() {
   // Select a trip to load in the workspace
   const handleSelectTrip = (trip) => {
     setActiveTrip(trip);
+    setCurrentSavedItineraryId(trip.id || null);
     clearCart();
     const places = trip.selected_places || trip.nearby_attractions || [];
     places.forEach(place => addPlace(place));
     setItineraryError(null);
     setCurrentPage('planner');
+  };
+
+  const handleContinuePlanning = (itineraryId, itinerary) => {
+    const trip = savedTrips.find((savedTrip) => savedTrip.id === itineraryId) || itinerary;
+    if (!trip) return;
+    setActiveTrip(trip);
+    setCurrentSavedItineraryId(itineraryId || trip.id || null);
+    clearCart();
+    (trip.selected_places || trip.nearby_attractions || []).forEach((place) => addPlace(place));
+    setSharedFilterState((prev) => ({
+      ...prev,
+      location: trip.start_location || prev.location,
+      destination: trip.destination || prev.destination,
+      duration: trip.total_days || prev.duration,
+      budget: trip.budget || prev.budget,
+      travellerCount: trip.travelers || prev.travellerCount,
+      travelMode: trip.travel_mode || trip.transport_preference || prev.travelMode,
+      accommodationType: trip.travel_style || trip.comfort_level || prev.accommodationType,
+      selectedTripTypes: trip.trip_type || prev.selectedTripTypes,
+    }));
+    setSharedDestinationsByDay(trip.destinations_by_day || {});
+    setItineraryError(null);
+    navigateTo('results');
   };
 
   const handleFinalizeItinerary = async () => {
@@ -690,7 +779,7 @@ export default function App() {
 
   return (
     <div className={`flex min-h-screen flex-col ${currentPage === 'home' ? 'bg-white' : (currentPage === 'results' || currentPage === 'destination' ? 'bg-roamio-bg-app' : 'bg-travel-bg-soft')}`}>
-      {currentPage !== 'home' && currentPage !== 'results' && currentPage !== 'destination' && (
+      {currentPage !== 'home' && currentPage !== 'results' && currentPage !== 'destination' && currentPage !== 'saved' && (
         <Navbar 
           currentPage={currentPage} 
           setCurrentPage={(p) => navigateTo(p)} 
@@ -701,7 +790,7 @@ export default function App() {
 
       <div className="flex flex-1 min-h-0">
         {/* Left Drawer Navigation */}
-        <Sidebar 
+        {currentPage !== 'saved' && <Sidebar 
           isOpen={sidebarOpen} 
           onClose={() => setSidebarOpen(false)}
           currentPage={currentPage}
@@ -741,7 +830,7 @@ export default function App() {
           setInterests={setInterests}
           additionalPrefs={additionalPrefs}
           setAdditionalPrefs={setAdditionalPrefs}
-        />
+        />}
 
         {/* Main Dashboard Panel */}
         <main className={`flex-1 ${currentPage === 'home' ? 'flex flex-col' : 'pb-20'}`}>
@@ -762,12 +851,14 @@ export default function App() {
           {currentPage === 'results' && (
             <ResultsDashboardPage
               setCurrentPage={(p) => navigateTo(p)}
+              onNavigateSaved={() => navigateTo('saved')}
               onSearchQuery={async (q) => {
                 if (q) {
                   await handleNaturalLanguageSearch(q);
                 }
               }}
               onNavigateToDestination={(dest) => navigateTo('destination', dest)}
+              onSavePlan={handleSavePlan}
               filterState={sharedFilterState}
               onFilterChange={handleSharedFilterChange}
               destinationsByDay={sharedDestinationsByDay}
@@ -782,13 +873,14 @@ export default function App() {
               destinationId={selectedDestinationId}
               selectedDestination={selectedDestinationData}
               onNavigateHome={() => navigateTo('home')}
+              onNavigateSaved={() => navigateTo('saved')}
               onSearch={async (q) => {
                 if (q) {
                   await handleNaturalLanguageSearch(q);
                 }
                 navigateTo('results');
               }}
-              onReviewPlan={() => console.log('[DestinationDetail] Review plan clicked')}
+              onSavePlan={handleSavePlan}
               onViewAll={() => console.log('[DestinationDetail] View all clicked')}
               filterState={sharedFilterState}
               tripDuration={sharedFilterState.duration}
@@ -860,11 +952,18 @@ export default function App() {
           )}
 
           {currentPage === 'saved' && (
-            <SavedTripsPage
+            <RoamioMyItinerariesPage
               savedTrips={savedTrips}
+              onContinuePlanning={handleContinuePlanning}
               onDeleteTrip={handleDeleteTrip}
-              onSelectTrip={handleSelectTrip}
-              setCurrentPage={(p) => navigateTo(p)}
+              onCreateTrip={() => navigateTo('home')}
+              onBack={() => {
+                if (window.history.length > 1) {
+                  window.history.back();
+                } else {
+                  navigateTo('home');
+                }
+              }}
             />
           )}
 

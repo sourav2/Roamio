@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Plus, X, Sparkles, MessageSquare } from 'lucide-react';
 import Button from './ui/Button';
+import SaveButton from './ui/SaveButton';
 import meghalayaImg from '../assets/images/Meghalaya.jpg';
 import { calculateItineraryTotals, calculateDynamicBudgetCategories } from '../data/destinationsData';
 
@@ -89,7 +90,7 @@ function BudgetDonutChart({ total = '₹0', categories = [] }) {
  *   - Dynamic Day Selector (Day 1 - Day N based on tripDuration)
  *   - Selected day utilizes Light Button token (#46B392)
  *   - Destination list belonging to individual days (Tiger Hill card)
- *   - "Add more Destinations" & "Review Plan" (Primary Accent #164A3A)
+ *   - "Add more Destinations" & "Save Plan" (Primary Accent #164A3A)
  * - Budget Breakdown View:
  *   - Circular Donut Chart with total estimate & 4 categories
  *   - Itemized legend breakdown
@@ -112,6 +113,7 @@ export default function RightSidePanel({
   const [activeView, setActiveView] = useState(initialView);
   const [internalSelectedDay, setInternalSelectedDay] = useState(1);
   const [internalDestinationsByDay, setInternalDestinationsByDay] = useState(initialDayDestinations);
+  const [saveMessage, setSaveMessage] = useState('');
 
   const selectedDay = controlledSelectedDay !== undefined ? controlledSelectedDay : internalSelectedDay;
   const handleSelectDay = (day) => {
@@ -140,6 +142,8 @@ export default function RightSidePanel({
       [day]: (prev[day] || []).filter((d) => d.id !== destId),
     }));
   };
+
+  const handleSavePlan = () => onReviewPlan?.();
 
   const currentDayDestinations = destinationsByDay[selectedDay] || [];
   const { cost, totalTime } = calculateItineraryTotals(destinationsByDay, travellerCount);
@@ -219,7 +223,7 @@ export default function RightSidePanel({
             </div>
           </div>
 
-          {/* Dynamic Day Selector (Uses Primary Accent #164A3A for selected day, compact 4px radius, wraps at max 5 per row) */}
+          {/* Dynamic Day Selector (Uses semantic light green token #46B392 for selected day, 14px Inter Medium typography, compact 4px radius) */}
           <div className="grid grid-cols-5 gap-roamio-2 w-full">
             {days.map((d) => {
               const isSelected = selectedDay === d;
@@ -228,15 +232,11 @@ export default function RightSidePanel({
                   key={d}
                   type="button"
                   onClick={() => handleSelectDay(d)}
-                  style={{
-                    backgroundColor: isSelected ? 'var(--roamio-primary-accent)' : '#FFFFFF',
-                    borderColor: isSelected ? 'var(--roamio-primary-accent)' : 'var(--roamio-border-light)',
-                  }}
                   className={`
-                    w-full text-center py-1.5 px-1 rounded-roamio-1 text-xs font-semibold transition-all duration-150 cursor-pointer select-none border
+                    w-full text-center py-1.5 px-1 rounded-roamio-1 roamio-body-sm-medium transition-all duration-150 cursor-pointer select-none border
                     ${isSelected
-                      ? 'text-white shadow-roamio-xs'
-                      : 'text-roamio-text-secondary hover:text-roamio-text-primary hover:border-roamio-border-strong'
+                      ? 'bg-roamio-btn-light border-roamio-btn-light text-white shadow-roamio-xs'
+                      : 'bg-white border-roamio-primary-accent text-roamio-primary-accent hover:bg-roamio-primary-accent/5'
                     }
                   `.trim()}
                 >
@@ -265,7 +265,7 @@ export default function RightSidePanel({
                       className="w-16 h-16 rounded-roamio-2 object-cover shrink-0 border border-roamio-border-light/50"
                     />
                     <div className="min-w-0 text-left">
-                      <h4 className="roamio-body-md font-bold text-roamio-text-primary truncate">
+                      <h4 className="roamio-body-md-medium text-roamio-text-primary truncate">
                         {dest.name}
                       </h4>
                       <p className="text-xs text-roamio-text-secondary truncate mt-0.5">
@@ -307,13 +307,17 @@ export default function RightSidePanel({
               Add more Destinations
             </Button>
 
-            <Button
-              variant="primary"
-              isFullWidth
-              onClick={onReviewPlan}
-            >
-              Review Plan
-            </Button>
+            <SaveButton
+              component={Button}
+              buttonProps={{ variant: 'primary', isFullWidth: true }}
+              label="Save Plan"
+              onSave={handleSavePlan}
+              onSuccess={() => setSaveMessage('')}
+              onError={(error) => setSaveMessage(error.message)}
+            />
+            {saveMessage && (
+              <p role="alert" className="text-xs text-red-600">{saveMessage}</p>
+            )}
           </div>
 
         </div>

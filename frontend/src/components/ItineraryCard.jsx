@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Car, Hotel, Tag, Calendar, ChevronDown, ChevronUp, Utensils, PlusCircle, Check } from 'lucide-react';
+import { MapPin, Car, Hotel, Tag, Calendar, ChevronDown, ChevronUp, Utensils, PlusCircle, Check, Clock3, WalletCards, MapPinned, TrainFront, Landmark, MoreHorizontal, History, ArrowRight } from 'lucide-react';
 import TravelTimeline from './TravelTimeline';
+import Button from './ui/Button';
 
 const FALLBACK_CATEGORIES = {
   mountain: [
@@ -102,7 +103,156 @@ const getFallbackImage = (name) => {
   return img_list[idx];
 };
 
+const formatBudget = (budget, currency = 'INR') => {
+  if (budget === undefined || budget === null || budget === '') return 'Not set';
+  const symbol = currency === 'INR' ? '₹' : '$';
+  return `${symbol}${Number(budget).toLocaleString(currency === 'INR' ? 'en-IN' : 'en-US')} est.`;
+};
+
+const getUpdatedLabel = (itinerary) => {
+  const timestamp = itinerary.updated_at || itinerary.updatedAt || itinerary.saved_at || itinerary.created_at;
+  if (!timestamp) return 'Updated 1 week ago';
+
+  const updatedDate = new Date(timestamp);
+  if (Number.isNaN(updatedDate.getTime())) return 'Updated 1 week ago';
+
+  const daysSinceUpdate = Math.max(0, Math.floor((Date.now() - updatedDate.getTime()) / 86400000));
+  if (daysSinceUpdate === 0) return 'Updated today';
+  if (daysSinceUpdate === 1) return 'Updated 1 day ago';
+  return `Updated ${daysSinceUpdate} days ago`;
+};
+
+function SavedItineraryCard({ itinerary, currency = 'INR', onContinuePlanning, onCardClick, onDelete }) {
+  const [isDeleteMenuOpen, setIsDeleteMenuOpen] = useState(false);
+  const destination = itinerary.destination || 'Saved itinerary';
+  const tripTitle = itinerary.title || itinerary.trip_name || destination;
+  const regions = itinerary.regions || [];
+  const imageUrl = itinerary.image_url || itinerary.imageUrl || itinerary.hero_image || regions.find((region) => region.image_url)?.image_url || getFallbackImage(destination);
+  const startLocation = itinerary.start_location || itinerary.startLocation;
+  const routeStops = regions.map((region) => region.region_name).filter(Boolean);
+  const route = itinerary.route?.length
+    ? itinerary.route
+    : [startLocation, ...routeStops, startLocation || destination].filter(Boolean);
+  const uniqueRoute = route.filter((place, index) => index === 0 || place !== route[index - 1]);
+  const plannedPlaces = itinerary.selected_places || itinerary.selectedPlaces || itinerary.nearby_attractions || [];
+  const placeCount = plannedPlaces.length || regions.reduce((count, region) => count + (region.places?.length || 0), 0);
+  const tags = [
+    itinerary.transport_preference || itinerary.transportPreference,
+    itinerary.theme || itinerary.trip_theme || itinerary.trip_type || itinerary.tripType || itinerary.interests?.[0] || regions.flatMap((region) => region.activities || []).find(Boolean),
+    itinerary.comfort_level || itinerary.comfortLevel
+  ].map((tag) => Array.isArray(tag) ? tag[0] : tag).filter(Boolean).map((tag) => String(tag).replace(/_/g, ' '));
+
+  const chipStyles = [
+    'bg-roamio-semantic-info-bg text-roamio-semantic-info',
+    'bg-roamio-semantic-danger-bg text-roamio-semantic-danger',
+    'bg-roamio-semantic-warning-bg text-roamio-semantic-warning',
+  ];
+
+  return (
+    <article
+      onClick={() => onCardClick?.(itinerary)}
+      className="flex h-full min-w-0 flex-col overflow-hidden rounded-roamio-2 border border-roamio-border-light bg-roamio-bg-card shadow-roamio-sm transition-shadow duration-200 hover:shadow-roamio-md"
+    >
+      <div className="relative aspect-[2.35/1] min-h-[138px] overflow-hidden bg-roamio-bg-secondary">
+        <img src={imageUrl} alt={destination} className="h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/10" />
+        <span className="absolute left-3 top-3 rounded-roamio-3 bg-roamio-semantic-success-bg px-2.5 py-1 roamio-body-sm-medium text-roamio-primary-accent">
+          Planning
+        </span>
+        <button
+          type="button"
+          aria-label={isDeleteMenuOpen ? `Delete ${destination}` : `More options for ${destination}`}
+          onClick={(event) => {
+            event.stopPropagation();
+            if (isDeleteMenuOpen) {
+              onDelete?.(itinerary);
+              setIsDeleteMenuOpen(false);
+            } else {
+              setIsDeleteMenuOpen(true);
+            }
+          }}
+          className={`absolute right-3 top-3 flex h-7 items-center justify-center rounded-roamio-3 bg-white px-2 text-xs font-medium shadow-roamio-sm transition-colors hover:bg-roamio-semantic-danger-bg ${isDeleteMenuOpen ? 'text-roamio-semantic-danger' : 'w-7 text-roamio-text-primary'}`}
+        >
+          {isDeleteMenuOpen ? 'Delete' : <MoreHorizontal className="h-4 w-4" />}
+        </button>
+      </div>
+
+      <div className="flex flex-1 flex-col p-roamio-3 gap-roamio-4">
+        {/* Title + Route Group (8px vertical gap) */}
+        <div className="flex flex-col gap-roamio-2">
+          <h3 className="roamio-body-lg-semibold text-roamio-text-primary">
+            {tripTitle}
+          </h3>
+
+          <div className="flex items-center gap-1.5 roamio-body-md-medium text-roamio-text-secondary">
+            <MapPin size={20} className="h-5 w-5 shrink-0 text-roamio-primary-accent" />
+            <span>{uniqueRoute.length ? uniqueRoute.join('  →  ') : destination}</span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-2 border-b border-roamio-divider pb-roamio-4">
+          <div className="flex items-center gap-roamio-4">
+            <Clock3 size={20} className="h-5 w-5 shrink-0 text-roamio-primary-accent" />
+            <div>
+              <span className="block roamio-body-xs text-roamio-text-tertiary">Trip Duration</span>
+              <span className="block roamio-body-xs text-roamio-text-primary">{itinerary.total_days || itinerary.duration || '—'} days</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-roamio-4">
+            <WalletCards size={20} className="h-5 w-5 shrink-0 text-roamio-primary-accent" />
+            <div>
+              <span className="block roamio-body-xs text-roamio-text-tertiary">Budget Avg.</span>
+              <span className="block roamio-body-xs text-roamio-text-primary">{formatBudget(itinerary.budget, currency)}</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-roamio-4">
+            <MapPinned size={20} className="h-5 w-5 shrink-0 text-roamio-primary-accent" />
+            <div>
+              <span className="block roamio-body-xs text-roamio-text-tertiary">Planned</span>
+              <span className="block roamio-body-xs text-roamio-text-primary">{placeCount || '—'} Places</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex min-h-6 flex-wrap gap-roamio-3">
+          {tags.slice(0, 3).map((tag, index) => {
+            const Icon = index === 0 ? TrainFront : index === 1 ? Landmark : null;
+            return (
+              <span key={`${tag}-${index}`} className={`inline-flex items-center gap-1.5 rounded-roamio-3 px-roamio-3 py-roamio-2 roamio-body-sm-medium capitalize ${chipStyles[index] || chipStyles[2]}`}>
+                {Icon && <Icon className="h-4 w-4 shrink-0 text-current" />}
+                <span>{tag}</span>
+              </span>
+            );
+          })}
+        </div>
+
+        <div className="mt-auto flex items-center justify-between gap-2">
+          <span className="flex min-w-0 items-center gap-1.5 text-roamio-text-tertiary">
+            <History className="h-5 w-5 shrink-0" />
+            <span className="truncate roamio-body-sm-medium">{getUpdatedLabel(itinerary)}</span>
+          </span>
+          <Button
+            variant="primary"
+            onClick={(event) => {
+              event.stopPropagation();
+              onContinuePlanning?.(itinerary.id, itinerary);
+            }}
+            icon={ArrowRight}
+            iconPosition="right"
+          >
+            Continue planning
+          </Button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
 export default function ItineraryCard({ 
+  itinerary = null,
+  onContinuePlanning = null,
+  onCardClick = null,
+  onDelete = null,
   region, 
   currency = 'INR',
   selectedPlaces = [],
@@ -110,6 +260,18 @@ export default function ItineraryCard({
   onRemovePlace = null
 }) {
   const [expanded, setExpanded] = useState(false);
+
+  if (itinerary) {
+    return (
+      <SavedItineraryCard
+        itinerary={itinerary}
+        currency={currency}
+        onContinuePlanning={onContinuePlanning}
+        onCardClick={onCardClick}
+        onDelete={onDelete}
+      />
+    );
+  }
 
   const regionKey = region.region_name?.toLowerCase().trim();
   const imageUrl = region.image_url || getFallbackImage(region.region_name);
@@ -178,7 +340,7 @@ export default function ItineraryCard({
         </div>
 
         {/* Place Name / Region Name */}
-        <h3 className="font-display text-base font-bold text-travel-text-primary mb-2">
+        <h3 className="roamio-body-md-medium text-roamio-text-primary mb-2">
           {region.region_name}
         </h3>
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User } from 'lucide-react';
+import { Bookmark } from 'lucide-react';
 import roamioLogo from '../assets/images/Roamio-Logo.png';
 import { SearchInput } from './ui';
 
@@ -14,7 +14,7 @@ import { SearchInput } from './ui';
 export default function DashboardHeader({
   onSearch,
   onNavigateHome,
-  onProfileClick,
+  onNavigateSaved,
   className = "",
 }) {
   const [query, setQuery] = useState('');
@@ -37,9 +37,9 @@ export default function DashboardHeader({
           <img
             src={roamioLogo}
             alt="Roamio Logo"
-            className="w-8 h-8 rounded-roamio-1 object-contain"
+            className="w-12 h-12 rounded-roamio-1 object-contain"
           />
-          <span className="font-roamio-display font-bold text-xl tracking-tight text-roamio-text-primary">
+          <span className="roamio-h4 text-roamio-text-primary">
             Roamio AI
           </span>
         </button>
@@ -56,15 +56,15 @@ export default function DashboardHeader({
           />
         </div>
 
-        {/* RIGHT: Profile / Account Icon */}
+        {/* RIGHT: Saved itineraries */}
         <div className="flex items-center shrink-0">
           <button
             type="button"
-            onClick={onProfileClick}
-            className="h-9 w-9 rounded-full bg-white border border-roamio-border-light hover:border-roamio-border-strong flex items-center justify-center text-roamio-text-secondary hover:text-roamio-text-primary transition cursor-pointer shadow-2xs"
-            aria-label="User Profile"
+            onClick={onNavigateSaved}
+            className="inline-flex h-[46px] items-center gap-3 rounded-roamio-1 border border-roamio-btn-light bg-roamio-btn-light px-4 py-2 text-white shadow-roamio-xs transition hover:bg-roamio-btn-light-hover hover:border-roamio-btn-light-hover cursor-pointer select-none font-roamio-body roamio-body-sm-medium"
           >
-            <User className="h-4.5 w-4.5" />
+            <Bookmark className="h-4 w-4 shrink-0 text-white" />
+            <span className="roamio-body-sm-medium text-white">My Itineraries</span>
           </button>
         </div>
 

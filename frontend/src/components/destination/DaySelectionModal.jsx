@@ -2,6 +2,7 @@ import React from 'react';
 import { Plus, X } from 'lucide-react';
 import Modal from '../ui/Modal';
 import Button from '../ui/Button';
+import SaveButton from '../ui/SaveButton';
 import meghalayaImg from '../../assets/images/Meghalaya.jpg';
 import { calculateItineraryTotals } from '../../data/destinationsData';
 
@@ -13,7 +14,7 @@ import { calculateItineraryTotals } from '../../data/destinationsData';
  * - Dynamic Summary: Days, Cost, and Total Time automatically calculated across itinerary items
  * - Day selector: Day 1 - Day N based on tripDuration (4px radius, Primary Accent selected)
  * - Added itinerary item cards with pure white surface, subtle shadow & hover lift
- * - "+ Add more Destinations" and active/disabled "Review Plan" using Roamio Button component
+ * - "+ Add more Destinations" and active/disabled "Save Plan" using Roamio Button component
  */
 export default function DaySelectionModal({
   isOpen,
@@ -130,7 +131,7 @@ export default function DaySelectionModal({
           </div>
         </div>
 
-        {/* 3. Dynamic Day Selector (Uses Primary Accent #164A3A for selected day, compact 4px radius, wraps at max 5 per row) */}
+        {/* 3. Dynamic Day Selector (Uses semantic light green token #46B392 for selected day, 14px Inter Medium typography, compact 4px radius) */}
         <div className="grid grid-cols-5 gap-roamio-2 w-full">
           {days.map((d) => {
             const isSelected = activeDay === d && hasItems;
@@ -139,15 +140,11 @@ export default function DaySelectionModal({
                 key={d}
                 type="button"
                 onClick={() => handleDayClick(d)}
-                style={{
-                  backgroundColor: isSelected ? 'var(--roamio-primary-accent)' : '#FFFFFF',
-                  borderColor: isSelected ? 'var(--roamio-primary-accent)' : 'var(--roamio-border-light)',
-                }}
                 className={`
-                  w-full text-center py-1.5 px-1 rounded-roamio-1 text-xs font-semibold transition-all duration-150 cursor-pointer select-none border
+                  w-full text-center py-1.5 px-1 rounded-roamio-1 roamio-body-sm-medium transition-all duration-150 cursor-pointer select-none border
                   ${isSelected
-                    ? 'text-white shadow-roamio-xs'
-                    : 'text-roamio-text-secondary hover:text-roamio-text-primary hover:border-roamio-border-strong'
+                    ? 'bg-roamio-btn-light border-roamio-btn-light text-white shadow-roamio-xs'
+                    : 'bg-white border-roamio-primary-accent text-roamio-primary-accent hover:bg-roamio-primary-accent/5'
                   }
                 `.trim()}
               >
@@ -177,7 +174,7 @@ export default function DaySelectionModal({
                       className="w-16 h-16 rounded-roamio-2 object-cover shrink-0 border border-roamio-border-light/50"
                     />
                     <div className="min-w-0 text-left">
-                      <h4 className="roamio-body-md font-bold text-roamio-text-primary truncate">
+                      <h4 className="roamio-body-md-medium text-roamio-text-primary truncate">
                         {item.name}
                       </h4>
                       <p className="text-xs text-roamio-text-secondary truncate mt-0.5">
@@ -227,18 +224,13 @@ export default function DaySelectionModal({
             Add more Destinations
           </Button>
 
-          <Button
-            variant="primary"
-            isFullWidth
+          <SaveButton
+            component={Button}
+            buttonProps={{ variant: 'primary', isFullWidth: true }}
+            label="Save Plan"
             disabled={!hasItems}
-            onClick={() => {
-              if (hasItems && onReviewPlan) {
-                onReviewPlan();
-              }
-            }}
-          >
-            Review Plan
-          </Button>
+            onSave={() => onReviewPlan?.()}
+          />
         </div>
 
       </div>

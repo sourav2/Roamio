@@ -1,0 +1,19 @@
+[1mdiff --git a/backend/image_cache.json b/backend/image_cache.json[m
+[1mindex 779f931..9213e0c 100644[m
+[1m--- a/backend/image_cache.json[m
+[1m+++ b/backend/image_cache.json[m
+[36m@@ -329,5 +329,12 @@[m
+   "bagore ki haveli folk dance & museum": "https://images.unsplash.com/photo-1454496522488-7a8e488e8606?q=80&w=600&auto=format&fit=crop",[m
+   "fateh sagar lake & nehru park": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=600&auto=format&fit=crop",[m
+   "jagdish temple historic carvings": "https://images.unsplash.com/photo-1561361513-2d000a50f0db?q=80&w=600&auto=format&fit=crop",[m
+[31m-  "jag mandir island palace": "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=600&auto=format&fit=crop"[m
+[32m+[m[32m  "jag mandir island palace": "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=600&auto=format&fit=crop",[m
+[32m+[m[32m  "rabindra bhavana museum": "https://images.unsplash.com/photo-1712319432079-06cca77ccb90?q=80&w=600&auto=format&fit=crop",[m
+[32m+[m[32m  "kala bhavana art complex": "https://images.unsplash.com/photo-1630594364583-79558de88863?q=80&w=600&auto=format&fit=crop",[m
+[32m+[m[32m  "khowai river canyon trail": "https://images.unsplash.com/photo-1696179926635-d104db53862b?q=80&w=600&auto=format&fit=crop",[m
+[32m+[m[32m  "visva bharati tagore ashram": "https://images.unsplash.com/photo-1677397333707-7b833006983d?q=80&w=600&auto=format&fit=crop",[m
+[32m+[m[32m  "sonajhuri haat saturday forest market": "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?q=80&w=600&auto=format&fit=crop",[m
+[32m+[m[32m  "amar kutir handicraft village": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=600&auto=format&fit=crop",[m
+[32m+[m[32m  "ballavpur deer wildlife sanctuary": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=600&auto=format&fit=crop"[m
+ }[m
+\ No newline at end of file[m

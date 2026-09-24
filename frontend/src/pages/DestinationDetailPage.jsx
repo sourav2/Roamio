@@ -58,10 +58,28 @@ function normalizeAttractionToPlace(item, destName) {
     : 'Free';
   const durationStr = item.visit_duration || '2–3 Hours';
 
+  // Build concise attribute characteristics list
+  let attributeList = '';
+  if (Array.isArray(item.highlights) && item.highlights.length > 0) {
+    attributeList = item.highlights.slice(0, 3).join(' · ');
+  } else if (Array.isArray(item.nearby_activities) && item.nearby_activities.length > 0) {
+    attributeList = item.nearby_activities.slice(0, 3).join(' · ');
+  } else if (item.attributes) {
+    attributeList = Array.isArray(item.attributes) ? item.attributes.slice(0, 3).join(' · ') : String(item.attributes);
+  } else if (typeof item.summary === 'string' && item.summary.includes(' · ')) {
+    attributeList = item.summary;
+  } else if (typeof item.description === 'string' && item.description.includes(' · ')) {
+    attributeList = item.description;
+  } else if (item.type) {
+    attributeList = `${item.type} · Sightseeing · Photography`;
+  } else {
+    attributeList = 'Scenic · Sightseeing · Photography';
+  }
+
   return {
     id,
     name: item.name,
-    description: item.summary || item.description || `Popular attraction in ${destName}.`,
+    description: attributeList,
     intro: item.description || item.summary || `Explore the scenic atmosphere of ${item.name}.`,
     category: (item.highlights && item.highlights[0]) || item.type || 'Attraction',
     categoryColor: '#10B981',
@@ -106,6 +124,8 @@ export default function DestinationDetailPage({
   destinationId = null,
   selectedDestination = null,
   onNavigateHome,
+  onNavigateSaved,
+  onSavePlan,
   onSearch,
   onReviewPlan,
   onViewAll,
@@ -383,6 +403,7 @@ export default function DestinationDetailPage({
         <DashboardHeader
           onNavigateHome={onNavigateHome}
           onSearch={onSearch}
+          onNavigateSaved={onNavigateSaved}
         />
         <main className="flex-1 flex flex-col items-center justify-center p-6 text-center">
           <div className="bg-white border border-roamio-border-light rounded-roamio-3 p-8 max-w-md shadow-2xs">
@@ -413,7 +434,7 @@ export default function DestinationDetailPage({
       <DashboardHeader
         onNavigateHome={onNavigateHome}
         onSearch={onSearch}
-        onProfileClick={() => console.log('[DestinationDetail] Profile clicked')}
+        onNavigateSaved={onNavigateSaved}
       />
 
       {/* 2. MAIN CONTENT & RIGHT PANEL (12-Column Desktop Grid with Roamio 16px Gutter) */}
@@ -507,7 +528,11 @@ export default function DestinationDetailPage({
             onSelectDay={handleSelectDay}
             destinationsByDay={destinationsByDay}
             onRemoveDestination={handleRemoveFromDay}
-            onReviewPlan={onReviewPlan}
+            onReviewPlan={() => onSavePlan?.({
+              destinationData: destData,
+              filters: filterState,
+              destinationsByDay,
+            })}
             onAddMoreDestinations={() => console.log('[DestinationDetail] Add more destinations clicked')}
           />
 
@@ -542,7 +567,11 @@ export default function DestinationDetailPage({
         destinationsByDay={destinationsByDay}
         onAddDestination={handleAddDestinationToDay}
         onRemoveDestination={handleRemoveFromDay}
-        onReviewPlan={onReviewPlan}
+        onReviewPlan={() => onSavePlan?.({
+          destinationData: destData,
+          filters: filterState,
+          destinationsByDay,
+        })}
         onAddMoreDestinations={() => {
           setIsDaySelectionOpen(false);
           setIsModalOpen(false);

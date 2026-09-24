@@ -24,6 +24,8 @@ import { fetchRecommendedDestinations, getDiscoveryMetrics } from '../services/r
  */
 export default function ResultsDashboardPage({
   setCurrentPage,
+  onNavigateSaved,
+  onSavePlan,
   onSearchQuery,
   onNavigateToDestination,
   filterState: controlledFilterState,
@@ -115,7 +117,7 @@ export default function ResultsDashboardPage({
           console.log('[ResultsDashboard] AI Search submitted:', q);
           if (onSearchQuery) onSearchQuery(q);
         }}
-        onProfileClick={() => console.log('[ResultsDashboard] Profile clicked')}
+        onNavigateSaved={onNavigateSaved}
       />
 
       {/* 2. MAIN 3-COLUMN DASHBOARD CONTENT */}
@@ -164,7 +166,10 @@ export default function ResultsDashboardPage({
             destinationsByDay={destinationsByDay}
             onRemoveDestination={onRemoveDestination}
             className="w-full lg:w-[360px] xl:w-[380px] shrink-0"
-            onReviewPlan={() => console.log('[ResultsDashboard] Review plan clicked')}
+            onReviewPlan={() => onSavePlan?.({
+              filters: activeFilters,
+              destinationsByDay,
+            })}
             onViewBreakdown={() => console.log('[ResultsDashboard] View breakdown clicked')}
             onAddMoreDestinations={() => console.log('[ResultsDashboard] Add more destinations clicked')}
           />

@@ -34,37 +34,37 @@ const SUGGESTED_DESTINATIONS = [
   {
     id: 'darjeeling',
     name: 'Darjeeling',
-    description: 'Queen of the Hills.',
+    description: 'Mountains · Trekking · Tea',
     image: 'https://images.unsplash.com/photo-1559139413-869fe2c7e1b4?q=80&w=600&auto=format&fit=crop',
   },
   {
     id: 'purulia',
     name: 'Purulia',
-    description: 'Rugged hills and tribal culture.',
+    description: 'Hills · Tribal Culture · Lakes',
     image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=600&auto=format&fit=crop',
   },
   {
     id: 'mandarmoni',
     name: 'Mandarmoni',
-    description: 'Seaside beach resort.',
+    description: 'Beach · Water Sports · Seafood',
     image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=600&auto=format&fit=crop',
   },
   {
     id: 'kalimpong',
     name: 'Kalimpong',
-    description: 'Himalayan views, monasteries, nature, local culture.',
+    description: 'Monasteries · Himalayan Views · Nature',
     image: 'https://images.unsplash.com/photo-1561361513-2d000a50f0db?q=80&w=600&auto=format&fit=crop',
   },
   {
     id: 'dooars',
     name: 'Dooars',
-    description: 'Lush forests and wildlife.',
+    description: 'Wildlife · Forests · Tea Estates',
     image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=600&auto=format&fit=crop',
   },
   {
     id: 'digha',
     name: 'Digha',
-    description: 'Gateway to the Bay of Bengal.',
+    description: 'Beaches · Coastal Walks · Seafood',
     image: 'https://images.unsplash.com/photo-1512400329929-f4104ecd552d?q=80&w=600&auto=format&fit=crop',
   },
 ];
@@ -76,9 +76,41 @@ const SUGGESTED_DESTINATIONS = [
  * - Card shape: rounded-roamio-2 (8px), 1px border light (#DEDEDE), white card background
  * - Top image banner: flush cutout treatment with rounded-t-roamio-2, aspect-[16/9] landscape ratio
  * - Content area: compact padding (px-3 pt-2.5 pb-3)
- * - Typography: Title (text-sm font-semibold #1C2420), Description (text-xs text-roamio-text-tertiary #949494)
+ * - Typography: Title (Body MD Medium 16/22 #1C2420), Secondary Attributes (Body SM Medium 14/20 #5B6660)
  */
 function DestinationCard({ destination, onSelect }) {
+  // Resolve concise destination characteristics / attributes formatted with " · "
+  const attributesText = (() => {
+    if (Array.isArray(destination.attributes) && destination.attributes.length > 0) {
+      return destination.attributes.join(' · ');
+    }
+    if (typeof destination.attributes === 'string' && destination.attributes.trim()) {
+      return destination.attributes.trim();
+    }
+    if (typeof destination.interests === 'string' && destination.interests.trim()) {
+      return destination.interests.trim();
+    }
+    if (Array.isArray(destination.interests) && destination.interests.length > 0) {
+      return destination.interests.join(' · ');
+    }
+    if (typeof destination.description === 'string' && destination.description.includes(' · ')) {
+      return destination.description;
+    }
+    if (Array.isArray(destination.tripTypes) && destination.tripTypes.length > 0) {
+      return destination.tripTypes.map(t => t.charAt(0).toUpperCase() + t.slice(1)).slice(0, 3).join(' · ');
+    }
+    if (Array.isArray(destination.trip_types) && destination.trip_types.length > 0) {
+      return destination.trip_types.map(t => t.charAt(0).toUpperCase() + t.slice(1)).slice(0, 3).join(' · ');
+    }
+    if (typeof destination.category === 'string' && destination.category.trim()) {
+      return destination.category;
+    }
+    if (typeof destination.description === 'string' && destination.description.trim()) {
+      return destination.description.trim();
+    }
+    return 'Scenic · Nature · Culture';
+  })();
+
   return (
     <div 
       onClick={() => onSelect && onSelect(destination)}
@@ -97,11 +129,11 @@ function DestinationCard({ destination, onSelect }) {
       </div>
 
       <div className="px-roamio-3 pt-2.5 pb-3 flex-1 flex flex-col justify-start">
-        <h4 className="text-sm font-semibold text-roamio-text-primary tracking-tight group-hover:text-roamio-primary-accent transition-colors">
+        <h4 className="roamio-body-md-medium text-roamio-text-primary group-hover:text-roamio-primary-accent transition-colors">
           {destination.name}
         </h4>
-        <p className="text-xs text-roamio-text-tertiary mt-1 leading-normal line-clamp-1">
-          {destination.description}
+        <p className="roamio-body-sm-medium text-roamio-text-secondary mt-1 leading-normal">
+          {attributesText}
         </p>
       </div>
     </div>

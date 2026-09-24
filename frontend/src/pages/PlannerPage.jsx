@@ -19,6 +19,7 @@ import { getCategoryMatchedImage, generateBlueprintPoster, getDynamicTipsAndPack
 import { exportSystem } from '../services/exportSystem';
 import BlueprintV2 from '../components/BlueprintV2';
 import BlueprintV3 from '../components/BlueprintV3';
+import SaveButton from '../components/ui/SaveButton';
 
 export default function PlannerPage({
   activeTrip,
@@ -806,19 +807,19 @@ export default function PlannerPage({
   };
 
   const handleSaveDraft = () => {
-    if (destination) {
-      const draftTrip = {
-        id: activeTrip?.id || Math.random().toString(36).substr(2, 9),
-        destination,
-        start_location: startLocation,
-        total_days: duration,
-        travelers,
-        budget: budgetInput,
-        transport_preference: transportPreference,
-        currency: 'INR'
-      };
-      setActiveTrip(draftTrip);
-    }
+    if (!destination) return null;
+    const draftTrip = {
+      id: activeTrip?.id || Math.random().toString(36).substr(2, 9),
+      destination,
+      start_location: startLocation,
+      total_days: duration,
+      travelers,
+      budget: budgetInput,
+      transport_preference: transportPreference,
+      currency: 'INR'
+    };
+    setActiveTrip(draftTrip);
+    return draftTrip;
   };
 
   // Dynamic Cost Calculator based on cart content & selected duration/travelers
@@ -1460,13 +1461,11 @@ export default function PlannerPage({
                 )}
                 <span>{itineraryLoading ? 'Generating...' : (activeTrip ? 'Regenerate' : 'Generate Plan')}</span>
               </button>
-              <button
-                type="button"
-                onClick={handleSaveDraft}
+              <SaveButton
+                label="Save Draft"
+                onSave={handleSaveDraft}
                 className="btn-premium btn-premium-secondary w-full"
-              >
-                <span>Save Draft</span>
-              </button>
+              />
             </div>
           </form>
 
@@ -2106,17 +2105,12 @@ export default function PlannerPage({
                         </div>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        <button
-                          onClick={() => onSaveTrip(activeTrip)}
-                          disabled={isSaved}
-                          className={`btn-premium ${isSaved
-                            ? 'btn-premium-success-outline cursor-not-allowed'
-                            : 'btn-premium-indigo'
-                            }`}
-                        >
-                          <Check className="h-4 w-4" />
-                          <span>{isSaved ? 'Saved ✓' : 'Save Trip'}</span>
-                        </button>
+                        <SaveButton
+                          label={isSaved ? 'Save Changes' : 'Save Trip'}
+                          onSave={() => onSaveTrip(activeTrip)}
+                          idleIcon={Check}
+                          className={`btn-premium ${isSaved ? 'btn-premium-success-outline' : 'btn-premium-indigo'}`}
+                        />
                         <button
                           onClick={handlePrint}
                           className="btn-premium btn-premium-secondary"
@@ -2165,17 +2159,12 @@ export default function PlannerPage({
                       <h3 className="text-section-heading text-travel-text-primary uppercase tracking-wider">Detailed Day-wise Schedule</h3>
                       <div className="flex items-center gap-3">
                         <span className="text-small-custom font-semibold text-[#6B7280]">Total Days: {duration}</span>
-                        <button
-                          onClick={() => onSaveTrip(activeTrip)}
-                          disabled={isSaved}
-                          className={`btn-premium ${isSaved
-                            ? 'btn-premium-success-outline cursor-not-allowed'
-                            : 'btn-premium-indigo'
-                            }`}
-                        >
-                          <Check className="h-4 w-4" />
-                          <span>{isSaved ? 'Saved ✓' : 'Save Trip'}</span>
-                        </button>
+                        <SaveButton
+                          label={isSaved ? 'Save Changes' : 'Save Trip'}
+                          onSave={() => onSaveTrip(activeTrip)}
+                          idleIcon={Check}
+                          className={`btn-premium ${isSaved ? 'btn-premium-success-outline' : 'btn-premium-indigo'}`}
+                        />
                       </div>
                     </div>
 

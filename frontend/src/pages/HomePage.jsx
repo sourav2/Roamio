@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, SlidersHorizontal } from 'lucide-react';
+import { Sparkles, SlidersHorizontal, Bookmark } from 'lucide-react';
 import roamioLogo from '../assets/images/roamio-logo.png';
 import { Button, SearchInput } from '../components/ui';
 import ManualPreferencesDrawer from '../components/ManualPreferencesDrawer';
@@ -63,27 +63,37 @@ export default function HomePage({ setCurrentPage, onSearchQuery, filterState, o
           onClick={() => setCurrentPage('home')}
           className="flex items-center gap-3 cursor-pointer select-none"
         >
-          <div className="h-9 w-9 overflow-hidden rounded-xl shrink-0 flex items-center justify-start">
+          <div className="h-12 w-12 overflow-hidden rounded-xl shrink-0 flex items-center justify-start">
             <img
               src={roamioLogo}
               alt="Roamio AI Logo"
-              className="h-9 w-auto max-w-none object-left object-contain"
+              className="h-12 w-12 object-contain"
             />
           </div>
-          <span className="roamio-h5 text-roamio-text-primary">
+          <span className="roamio-h4 text-roamio-text-primary">
             Roamio AI
           </span>
         </div>
 
-        {/* Right: "Set preferences manually" Control */}
-        <button
-          type="button"
-          onClick={handleManualPreferencesClick}
-          className="flex items-center gap-2 roamio-body-sm-medium text-roamio-text-primary hover:text-roamio-primary-accent transition-colors duration-150 cursor-pointer select-none"
-        >
-          <SlidersHorizontal className="h-4 w-4 text-roamio-text-primary shrink-0" />
-          <span>Set preferences manually</span>
-        </button>
+        {/* Right: Header actions */}
+        <div className="flex items-center gap-4">
+          <button
+            type="button"
+            onClick={handleManualPreferencesClick}
+            className="flex items-center gap-2 roamio-body-sm-medium text-roamio-text-primary hover:text-roamio-primary-accent transition-colors duration-150 cursor-pointer select-none"
+          >
+            <SlidersHorizontal className="h-4 w-4 text-roamio-text-primary shrink-0" />
+            <span>Set preferences manually</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setCurrentPage('saved')}
+            className="inline-flex h-[46px] items-center gap-3 rounded-roamio-1 border border-roamio-btn-light bg-roamio-btn-light px-4 py-2 text-white shadow-roamio-xs transition hover:bg-roamio-btn-light-hover hover:border-roamio-btn-light-hover cursor-pointer select-none font-roamio-body roamio-body-sm-medium"
+          >
+            <Bookmark className="h-4 w-4 shrink-0 text-white" />
+            <span className="roamio-body-sm-medium text-white">My Itineraries</span>
+          </button>
+        </div>
       </header>
 
       {/* 2. HERO SECTION (Vertically & Horizontally Centered) */}

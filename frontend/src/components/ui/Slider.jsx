@@ -38,7 +38,7 @@ export default function Slider({
       <div className="relative w-full h-[6px] bg-[#D6E0DA] rounded-full overflow-hidden">
         {/* Active Track (Roamio Primary Accent) */}
         <div
-          className="h-full bg-roamio-primary-accent transition-all duration-75 rounded-full"
+          className="h-full bg-roamio-primary-accent rounded-full"
           style={{ width: `${percentage}%` }}
         />
       </div>
@@ -48,7 +48,7 @@ export default function Slider({
 
       {/* 2. Material-Style Vertical Capsule Pill Thumb Handle */}
       <div
-        className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 pointer-events-none transition-all duration-75 z-10 flex items-center justify-center"
+        className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 pointer-events-none z-10 flex items-center justify-center"
         style={{ left: `${percentage}%` }}
       >
         <div className="w-[5px] h-[18px] bg-roamio-primary-accent rounded-full shadow-2xs" />
@@ -62,6 +62,7 @@ export default function Slider({
         step={step}
         value={clampedValue}
         onChange={handleChange}
+        onInput={handleChange}
         disabled={disabled}
         aria-label={ariaLabel}
         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed z-20"

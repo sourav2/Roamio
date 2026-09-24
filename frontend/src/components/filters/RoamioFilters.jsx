@@ -195,28 +195,39 @@ const RoamioFilters = forwardRef(function RoamioFilters({
     const curDestObj = overrides.selectedDestination !== undefined ? overrides.selectedDestination : selectedDestination;
     const curDestTyped = overrides.destinationTyped !== undefined ? overrides.destinationTyped : destinationTyped;
 
+    const curTravellers = overrides.travellers !== undefined ? overrides.travellers : travellers;
+    const curTravellerCount = overrides.travellerCount !== undefined ? overrides.travellerCount : travellerCount;
+    const curDuration = overrides.duration !== undefined ? overrides.duration : duration;
+    const curBudget = overrides.budget !== undefined ? overrides.budget : budget;
+    const curMaxTravelTime = overrides.maxTravelTime !== undefined ? overrides.maxTravelTime : maxTravelTime;
+    const curTravelMode = overrides.travelMode !== undefined ? overrides.travelMode : travelMode;
+    const curTripTypes = overrides.tripTypes !== undefined ? overrides.tripTypes : (overrides.selectedTripTypes !== undefined ? overrides.selectedTripTypes : selectedTripTypes);
+    const curAccommodationType = overrides.accommodationType !== undefined ? overrides.accommodationType : accommodationType;
+    const curCrowdLevel = overrides.crowdLevel !== undefined ? overrides.crowdLevel : crowdLevel;
+
     const { isLocValid: validLoc, isDestValid: validDest, canSubmit: validNow, canonicalLoc, canonicalDest } = checkValidity(
       curLocObj, curLocTyped, curDestObj, curDestTyped
     );
 
     onChange({
-      ...overrides,
       location: canonicalLoc,
       selectedLocation: validLoc ? curLocObj : null,
       locationTyped: curLocTyped,
       destination: canonicalDest,
       selectedDestination: (validDest && canonicalDest) ? curDestObj : null,
       destinationTyped: curDestTyped,
-      travellers,
-      travellerCount,
-      duration,
-      budget,
-      maxTravelTime,
-      travelMode,
-      tripTypes: selectedTripTypes,
-      accommodationType,
-      crowdLevel,
+      travellers: curTravellers,
+      travellerCount: curTravellerCount,
+      duration: curDuration,
+      budget: curBudget,
+      maxTravelTime: curMaxTravelTime,
+      travelMode: curTravelMode,
+      tripTypes: curTripTypes,
+      selectedTripTypes: curTripTypes,
+      accommodationType: curAccommodationType,
+      crowdLevel: curCrowdLevel,
       isValid: validNow,
+      ...overrides,
     });
   };
 
@@ -287,10 +298,38 @@ const RoamioFilters = forwardRef(function RoamioFilters({
     notifyChange({ duration: val });
   };
 
+  const handleBudgetChange = (newBudget) => {
+    const val = Number(newBudget);
+    setBudget(val);
+    notifyChange({ budget: val });
+  };
+
+  const handleMaxTravelTimeChange = (time) => {
+    setMaxTravelTime(time);
+    notifyChange({ maxTravelTime: time });
+  };
+
+  const handleTravelModeChange = (mode) => {
+    setTravelMode(mode);
+    notifyChange({ travelMode: mode });
+  };
+
   const handleTripTypeToggle = (id) => {
-    setSelectedTripTypes((prev) =>
-      prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id]
-    );
+    setSelectedTripTypes((prev) => {
+      const next = prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id];
+      notifyChange({ tripTypes: next, selectedTripTypes: next });
+      return next;
+    });
+  };
+
+  const handleAccommodationTypeChange = (acc) => {
+    setAccommodationType(acc);
+    notifyChange({ accommodationType: acc });
+  };
+
+  const handleCrowdLevelChange = (level) => {
+    setCrowdLevel(level);
+    notifyChange({ crowdLevel: level });
   };
 
   const handleReset = () => {
@@ -474,7 +513,7 @@ const RoamioFilters = forwardRef(function RoamioFilters({
           max={7000}
           step={500}
           value={budget}
-          onChange={(val) => setBudget(val)}
+          onChange={handleBudgetChange}
           ariaLabel="Budget per person"
         />
         <div className="flex justify-between items-center text-[11px] text-roamio-text-secondary pt-0.5">
@@ -497,7 +536,7 @@ const RoamioFilters = forwardRef(function RoamioFilters({
               radius="1"
               selectedVariant="primary"
               selected={maxTravelTime === time}
-              onClick={() => setMaxTravelTime(time)}
+              onClick={() => handleMaxTravelTimeChange(time)}
             >
               {time}
             </Chip>
@@ -519,7 +558,7 @@ const RoamioFilters = forwardRef(function RoamioFilters({
               radius="1"
               selectedVariant="primary"
               selected={travelMode === mode}
-              onClick={() => setTravelMode(mode)}
+              onClick={() => handleTravelModeChange(mode)}
             >
               {mode}
             </Chip>
@@ -575,7 +614,7 @@ const RoamioFilters = forwardRef(function RoamioFilters({
               radius="1"
               selectedVariant="light"
               selected={accommodationType === acc}
-              onClick={() => setAccommodationType(acc)}
+              onClick={() => handleAccommodationTypeChange(acc)}
             >
               {acc}
             </Chip>
@@ -597,7 +636,7 @@ const RoamioFilters = forwardRef(function RoamioFilters({
               radius="1"
               selectedVariant="light"
               selected={crowdLevel === level}
-              onClick={() => setCrowdLevel(level)}
+              onClick={() => handleCrowdLevelChange(level)}
             >
               {level}
             </Chip>

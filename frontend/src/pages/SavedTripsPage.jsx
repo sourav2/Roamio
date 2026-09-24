@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Bookmark, Calendar, Users, Trash2, Compass } from 'lucide-react';
+import { Bookmark, Compass } from 'lucide-react';
+import ItineraryCard from '../components/ItineraryCard';
 
-export default function SavedTripsPage({ savedTrips, onDeleteTrip, onSelectTrip, setCurrentPage }) {
+export default function SavedTripsPage({ savedTrips, onDeleteTrip, onSelectTrip, onContinuePlanning, setCurrentPage }) {
   const [selectedTripDetails, setSelectedTripDetails] = useState(null);
 
   const handleSelect = (trip) => {
@@ -13,8 +14,12 @@ export default function SavedTripsPage({ savedTrips, onDeleteTrip, onSelectTrip,
   };
 
   const handleLoadInWorkspace = (trip) => {
+    if (onContinuePlanning) {
+      onContinuePlanning(trip);
+      return;
+    }
     onSelectTrip(trip);
-    setCurrentPage('planner');
+    setCurrentPage('results');
   };
 
   return (
@@ -50,58 +55,16 @@ export default function SavedTripsPage({ savedTrips, onDeleteTrip, onSelectTrip,
             </span>
             <div className="space-y-3">
               {savedTrips.map((trip) => (
-                <div
+                <ItineraryCard
                   key={trip.id}
-                  onClick={() => handleSelect(trip)}
-                  className={`cursor-pointer rounded-2xl border p-4 transition-all duration-200 text-left ${
-                    selectedTripDetails?.id === trip.id
-                      ? 'border-travel-button-dark bg-travel-accent-gray/45 shadow-sm'
-                      : 'border-travel-accent-gray bg-travel-bg-white hover:bg-travel-bg-gray hover:shadow-sm'
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-3 mb-2">
-                    <h3 className="text-xs font-bold text-travel-text-primary truncate">
-                      {trip.destination}
-                    </h3>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (selectedTripDetails?.id === trip.id) {
-                          setSelectedTripDetails(null);
-                        }
-                        onDeleteTrip(trip.id);
-                      }}
-                      className="rounded-lg p-1.5 text-red-500 hover:bg-red-50 transition"
-                      title="Delete trip"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2 text-3xs text-travel-text-muted mb-3 border-b border-travel-accent-gray/60 pb-2.5">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-3.5 w-3.5" />
-                      <span>{trip.total_days} Days</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Users className="h-3.5 w-3.5" />
-                      <span>{trip.travelers} Guests</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-3xs text-travel-text-muted uppercase tracking-wider font-semibold block">Total Budget</span>
-                      <span className="text-2xs font-bold text-travel-text-primary">
-                        ₹{trip.budget?.toLocaleString()}
-                      </span>
-                    </div>
-                    <span className="text-3xs font-semibold text-travel-button-dark bg-travel-accent-gray px-2 py-0.5 rounded capitalize">
-                      {trip.comfort_level}
-                    </span>
-                  </div>
-
-                </div>
+                  itinerary={trip}
+                  onCardClick={handleSelect}
+                  onDelete={(selectedTrip) => {
+                    if (selectedTripDetails?.id === selectedTrip.id) setSelectedTripDetails(null);
+                    onDeleteTrip(selectedTrip.id);
+                  }}
+                  onContinuePlanning={handleLoadInWorkspace}
+                />
               ))}
             </div>
           </div>
@@ -109,7 +72,13 @@ export default function SavedTripsPage({ savedTrips, onDeleteTrip, onSelectTrip,
           {/* Details Preview Section */}
           <div className="lg:col-span-2">
             {selectedTripDetails ? (
-              <div className="rounded-2xl border border-travel-accent-gray bg-travel-bg-white p-6 shadow-premium space-y-6">
+              <div className="space-y-6">
+                <ItineraryCard
+                  itinerary={selectedTripDetails}
+                  onContinuePlanning={handleLoadInWorkspace}
+                />
+
+                <div className="rounded-2xl border border-travel-accent-gray bg-travel-bg-white p-6 shadow-premium space-y-6">
                 
                 {/* Preview Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-travel-accent-gray pb-5">
@@ -170,6 +139,7 @@ export default function SavedTripsPage({ savedTrips, onDeleteTrip, onSelectTrip,
                   </div>
                 </div>
 
+                </div>
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-20 text-center border border-dashed border-travel-accent-gray bg-travel-bg-white rounded-2xl p-8">

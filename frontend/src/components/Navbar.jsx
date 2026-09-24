@@ -19,13 +19,14 @@ export default function Navbar({ currentPage, setCurrentPage, toggleSidebar, onO
 
           <div
             onClick={() => setCurrentPage('home')}
-            className="flex cursor-pointer items-center gap-2 font-display text-lg font-black tracking-tight text-travel-text-primary"
+            className="flex cursor-pointer items-center gap-2 text-travel-text-primary"
           >
             <img
               src={roamioLogo}
               alt="Roamio AI"
-              className="h-12 w-auto object-contain"
+              className="h-12 w-12 object-contain"
             />
+            <span className="roamio-h4 text-roamio-text-primary">Roamio AI</span>
           </div>
         </div>
 

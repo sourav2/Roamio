@@ -18,6 +18,35 @@ export default function ExperienceCard({
 }) {
   if (!place) return null;
 
+  // Resolve concise destination characteristics / attributes formatted with " · "
+  const attributesText = (() => {
+    if (Array.isArray(place.attributes) && place.attributes.length > 0) {
+      return place.attributes.join(' · ');
+    }
+    if (typeof place.attributes === 'string' && place.attributes.trim()) {
+      return place.attributes.trim();
+    }
+    if (Array.isArray(place.highlights) && place.highlights.length > 0) {
+      return place.highlights.join(' · ');
+    }
+    if (typeof place.description === 'string' && place.description.includes(' · ')) {
+      return place.description;
+    }
+    if (Array.isArray(place.experiences) && place.experiences.length > 0) {
+      return place.experiences.slice(0, 3).join(' · ');
+    }
+    if (Array.isArray(place.activities) && place.activities.length > 0) {
+      return place.activities.slice(0, 3).join(' · ');
+    }
+    if (typeof place.description === 'string' && place.description.trim()) {
+      return place.description.trim();
+    }
+    if (typeof place.category === 'string' && place.category.trim()) {
+      return `${place.category} · Sightseeing · Photography`;
+    }
+    return 'Scenic · Sightseeing · Photography';
+  })();
+
   return (
     <div
       onClick={() => onCardClick && onCardClick(place)}
@@ -39,11 +68,11 @@ export default function ExperienceCard({
       {/* Card Content & Action */}
       <div className="px-roamio-3 pt-2.5 pb-3 flex-1 flex flex-col justify-between">
         <div>
-          <h4 className="text-sm font-semibold text-roamio-text-primary tracking-tight group-hover:text-roamio-primary-accent transition-colors line-clamp-1">
+          <h4 className="roamio-body-md-medium text-roamio-text-primary group-hover:text-roamio-primary-accent transition-colors">
             {place.name}
           </h4>
-          <p className="text-xs text-roamio-text-tertiary mt-1 leading-normal line-clamp-2 min-h-[32px]">
-            {place.description}
+          <p className="roamio-body-sm-medium text-roamio-text-secondary mt-1 leading-normal">
+            {attributesText}
           </p>
         </div>
 
