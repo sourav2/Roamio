@@ -19,8 +19,12 @@ else:
 # Validate essential backend environment variables
 def validate_backend_env():
     warnings = []
-    if not os.getenv("GEMINI_API_KEY"):
-        warnings.append("GEMINI_API_KEY is missing. Gemini AI features will use high-fidelity mock fallbacks.")
+    gemini_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+    if gemini_key:
+        logger.info("Gemini AI active (GEMINI_API_KEY configured).")
+    else:
+        warnings.append("GEMINI_API_KEY is missing. Travel engine will use high-fidelity mock fallbacks.")
+
     if not os.getenv("OSRM_BASE_URL"):
         warnings.append("OSRM_BASE_URL is missing. Defaulting to https://router.project-osrm.org")
         os.environ["OSRM_BASE_URL"] = "https://router.project-osrm.org"
@@ -72,17 +76,17 @@ app.include_router(search.router, prefix="/api", tags=["Search"])
 @app.get("/api/health")
 def health_check():
     """
-    Detailed Service health check endpoint validating OpenAI config, Maps API, and environment.
+    Detailed Service health check endpoint validating Gemini config, Maps API, and environment.
     """
     # Environment loading check
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     dotenv_path = os.path.join(base_dir, '.env')
     env_loaded = os.path.exists(dotenv_path)
 
-    # OpenAI configuration check
-    openai_key = os.getenv("OPENAI_API_KEY")
-    openai_configured = bool(openai_key)
-    openai_integration = "active" if openai_configured else "fallback_mock_active"
+    # Gemini configuration check
+    gemini_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+    gemini_configured = bool(gemini_key)
+    gemini_integration = "active" if gemini_configured else "fallback_mock_active"
     
     # Maps API configuration check
     maps_configured = bool(
@@ -95,7 +99,7 @@ def health_check():
     logger.info("Health check endpoint accessed.")
     return {
         "status": "healthy",
-        "openai_integration": openai_integration,
+        "gemini_integration": gemini_integration,
         "maps_api": maps_api,
         "environment_loaded": env_loaded
     }

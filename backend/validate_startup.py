@@ -21,7 +21,7 @@ def check_virtual_env() -> bool:
 
 def check_dependencies() -> bool:
     """Verifies that all required packages can be imported."""
-    required = ["fastapi", "uvicorn", "dotenv", "openai", "requests", "pydantic"]
+    required = ["fastapi", "uvicorn", "dotenv", "requests", "pydantic"]
     missing = []
     
     print("\n+----------------------------------------------------------+")
@@ -63,7 +63,7 @@ def check_env_file() -> bool:
 
 def check_api_keys() -> None:
     """Inspects loaded API keys and logs warning/status boxes."""
-    openai_key = os.getenv("OPENAI_API_KEY")
+    gemini_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY") or os.getenv("VITE_GEMINI_API_KEY")
     google_maps_key = os.getenv("GOOGLE_MAPS_API_KEY")
     mapbox_key = os.getenv("MAPBOX_API_KEY")
     openroute_key = os.getenv("OPENROUTESERVICE_API_KEY")
@@ -72,11 +72,11 @@ def check_api_keys() -> None:
     print("|                     API KEYS STATUS                      |")
     print("+----------------------------------------------------------+")
     
-    if openai_key:
-        masked = openai_key[:8] + "..." + openai_key[-4:] if len(openai_key) > 12 else "***"
-        print(f"[OK] OpenAI API Key        : LOADED ({masked})")
+    if gemini_key:
+        masked = gemini_key[:8] + "..." + gemini_key[-4:] if len(gemini_key) > 12 else "***"
+        print(f"[OK] Gemini API Key (Primary): LOADED ({masked})")
     else:
-        print("[WARN] OpenAI API Key        : MISSING (Fallback mock travel engine active)")
+        print("[WARN] Gemini API Key (Primary): MISSING (Fallback mock travel engine active)")
         
     if google_maps_key:
         print("[OK] Google Maps API Key   : LOADED")

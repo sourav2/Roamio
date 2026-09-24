@@ -5,11 +5,15 @@ import urllib.request
 import urllib.parse
 import asyncio
 from functools import partial
-from openai import OpenAI
+try:
+    from openai import OpenAI
+except ImportError:
+    OpenAI = None
 from app.prompts.travel_prompts import SYSTEM_PROMPT_CHAT, SYSTEM_PROMPT_ITINERARY
 from app.utils.logger import get_logger
 
 # Import dynamic service layers
+from app.services.gemini_service import GeminiService
 from app.services.geocoding_service import geocode_location
 from app.services.image_service import fetch_travel_image
 from app.services.attraction_service import discover_nearby_attractions, calculate_haversine_distance, get_parent_location_details
@@ -35,17 +39,15 @@ DESTINATION_SUB_REGIONS = {
 
 class OpenAIService:
     def __init__(self):
+        self.gemini_service = GeminiService()
         self.api_key = os.getenv("OPENAI_API_KEY")
-        if self.api_key:
-            logger.info("Initializing OpenAI client with configured API key.")
+        self.client = None
+        if self.api_key and OpenAI:
             try:
                 self.client = OpenAI(api_key=self.api_key)
             except Exception as e:
-                logger.error(f"Failed to initialize OpenAI client: {e}", exc_info=True)
+                logger.error(f"Failed to initialize optional OpenAI client: {e}", exc_info=True)
                 self.client = None
-        else:
-            logger.warning("No OPENAI_API_KEY environment variable found. OpenAI client set to None (using fallback mock travel engine).")
-            self.client = None
 
     def geocode_place(self, query: str) -> tuple[float, float]:
         """Geocodes place forwarding to geocoding service."""
@@ -56,27 +58,9 @@ class OpenAIService:
 
     async def get_chat_response(self, messages: list) -> str:
         """
-        Sends the message history to OpenAI, or runs a mock conversational reply if API key is missing.
+        Sends the message history to Gemini AI, or runs a mock conversational reply if API key is missing.
         """
-        logger.info(f"Received chat request with {len(messages)} messages.")
-        if self.client:
-            try:
-                system_message = {"role": "system", "content": SYSTEM_PROMPT_CHAT}
-                api_messages = [system_message] + [m for m in messages if m.get("role") != "system"]
-                
-                response = self.client.chat.completions.create(
-                    model="gpt-4o-mini",
-                    messages=api_messages,
-                    temperature=0.7,
-                    max_tokens=1000
-                )
-                return response.choices[0].message.content
-            except Exception as e:
-                logger.error(f"Error connecting to OpenAI API: {e}")
-                return f"Error connecting to OpenAI API: {str(e)}. Please check your backend configuration."
-        
-        last_message = messages[-1]["content"] if messages else ""
-        return self._generate_mock_chat_response(last_message, messages)
+        return await self.gemini_service.get_chat_response(messages)
 
     async def get_autocomplete_suggestions(self, query: str) -> list:
         if not query:
@@ -204,52 +188,28 @@ class OpenAIService:
             for p in recommended_places
         ])
 
-        if self.client:
+        # Primary AI Generation: Gemini 2.5 Flash
+        gemini_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY") or os.getenv("VITE_GEMINI_API_KEY")
+        if gemini_key:
             try:
-                # Discovered real attractions to inject into OpenAI prompt context
-                logger.info("===== TOP RECOMMENDATIONS =====")
-                logger.info([p["name"] for p in recommended_places[:5]])
-
-                logger.info("===== GOOGLE/MAPS PLACES =====")
-                logger.info([p.get("name") for p in real_places])
-
-                logger.info("===== FILTERED REAL PLACES =====")
-                logger.info([p.get("name") for p in real_places])
-
+                logger.info("Generating itinerary with Gemini AI (Gemini 2.5 Flash)...")
+                itinerary = await self.gemini_service.generate_itinerary(
+                    dest, days, budget, comfort, transport, place_types, real_places
+                )
+            except Exception as e:
+                logger.error(f"Gemini generation failed: {e}. Falling back to mock engine.", exc_info=True)
+                itinerary = None
+        elif self.client:
+            try:
                 places_context = "\n".join([f"- Name: {p['name']}. Summary: {p['summary']}" for p in real_places[:6]])
-                
                 user_content = f"""
                 Generate a {days}-day itinerary for {dest}
-
                 Number of travelers: {travelers}
                 Budget: {budget}
-
-                Interests:
-                {", ".join(place_types)}
-
-                PRIORITIZED ATTRACTIONS
-                (selected by recommendation engine):
-
-                {recommendation_context}
-
-                OTHER DISCOVERED ATTRACTIONS:
-
-                {places_context}
-
-                You MUST build the itinerary around the attractions listed
-                under PRIORITIZED ATTRACTIONS.
-
-                At least 80% of all sightseeing activities must come from
-                that list.
-
-                Only use OTHER DISCOVERED ATTRACTIONS if additional places
-                are required.
+                Interests: {", ".join(place_types)}
+                PRIORITIZED ATTRACTIONS: {recommendation_context}
+                OTHER ATTRACTIONS: {places_context}
                 """
-                logger.info("===== RECOMMENDATION ENGINE OUTPUT =====")
-                logger.info(recommendation_context)
-
-                logger.info("===== FINAL PROMPT =====")
-                logger.info(user_content)
                 response = self.client.chat.completions.create(
                     model="gpt-4o-mini",
                     messages=[
@@ -261,24 +221,14 @@ class OpenAIService:
                 )
                 itinerary = json.loads(response.choices[0].message.content)
             except Exception as e:
-                logger.error(f"OpenAI generation failed: {e}. Falling back to Gemini.")
+                logger.error(f"OpenAI generation failed: {e}")
+                itinerary = None
+        else:
+            logger.info("GEMINI_API_KEY is not configured. Using high-fidelity rule-based travel engine.")
+            itinerary = None
 
         allow_transit = preferences.get("allow_international_transit", False)
-        logger.info(f"ITINERARY AFTER OPENAI = {type(itinerary)}")
-        logger.info(f"ITINERARY CONTENT = {itinerary}")
-        if not itinerary:
-            gemini_key = os.getenv("GEMINI_API_KEY") or os.getenv("VITE_GEMINI_API_KEY")
-            if gemini_key:
-                try:
-                    logger.info("Using Gemini Service as OpenAI fallback...")
-                    from app.services.gemini_service import GeminiService
-                    gs = GeminiService()
-                    itinerary = await gs.generate_itinerary(
-                        dest, days, budget, comfort, transport, place_types, real_places
-                    )
-                except Exception as e:
-                    logger.error(f"Gemini generation failed: {e}. Falling back to mock engine.")
-                    itinerary = None
+        logger.info(f"ITINERARY GENERATION RESULT = {type(itinerary)}")
 
         if not itinerary:
             itinerary = await self._generate_mock_itinerary(start_location, dest, days, travelers, budget, comfort, transport, place_types, allow_transit)

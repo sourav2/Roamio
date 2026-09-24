@@ -209,20 +209,217 @@ DESTINATION_ATTRACTIONS_DATABASE = {
         {"name": "Shivpuri White Water River Rafting", "type": "Adventure Rafting", "lat": 30.1410, "lon": 78.3910}
     ],
     "manali": [
-        {"name": "Solang Valley Snow Sports", "type": "Adventure Valley", "lat": 32.3168, "lon": 77.1584},
+        {"name": "Solang Valley Snow Sports & Zorbing", "type": "Adventure Valley", "lat": 32.3168, "lon": 77.1584},
         {"name": "Rohtang Pass Alpine Ridge", "type": "Mountain Pass", "lat": 32.3716, "lon": 77.2435},
-        {"name": "Hadimba Devi Cedar Temple", "type": "Ancient Temple", "lat": 32.2471, "lon": 77.1795},
-        {"name": "Old Manali Cafes & Apple Orchards", "type": "Heritage Village", "lat": 32.2560, "lon": 77.1750},
+        {"name": "Hadimba Devi Ancient Cedar Temple", "type": "Heritage Temple", "lat": 32.2471, "lon": 77.1795},
+        {"name": "Old Manali Riverside Cafes & Trails", "type": "Heritage Village", "lat": 32.2560, "lon": 77.1750},
         {"name": "Jogini Waterfalls Trek", "type": "Waterfall Trek", "lat": 32.2625, "lon": 77.1950},
-        {"name": "Vashisht Natural Hot Springs", "type": "Hot Springs", "lat": 32.2610, "lon": 77.1890}
+        {"name": "Vashisht Natural Hot Sulfur Springs", "type": "Hot Springs", "lat": 32.2610, "lon": 77.1890},
+        {"name": "Atal Tunnel South Portal & Drive", "type": "Mountain Tunnel", "lat": 32.3644, "lon": 77.1330},
+        {"name": "Manu Temple Old Manali", "type": "Ancient Temple", "lat": 32.2580, "lon": 77.1720},
+        {"name": "Van Vihar National Pine Park", "type": "Pine Forest Park", "lat": 32.2410, "lon": 77.1860}
     ],
     "shimla": [
-        {"name": "Jakhoo Hill Hanuman Temple", "type": "Hilltop Temple", "lat": 31.1011, "lon": 77.1852},
+        {"name": "Jakhoo Hill Hanuman Temple & Ropeway", "type": "Hilltop Temple", "lat": 31.1011, "lon": 77.1852},
         {"name": "Mall Road & Ridge Promenade", "type": "Shopping Promenade", "lat": 31.1044, "lon": 77.1741},
         {"name": "Christ Church Shimla", "type": "Colonial Church", "lat": 31.1051, "lon": 77.1752},
         {"name": "Viceregal Lodge Indian Institute of Advanced Study", "type": "Colonial Palace", "lat": 31.1027, "lon": 77.1415},
-        {"name": "Kufri Adventure Park & Snow Point", "type": "Hill Station Point", "lat": 31.1002, "lon": 77.2662},
+        {"name": "Kufri Mahasu Peak & Himalayan Nature Park", "type": "Hill Station Point", "lat": 31.1002, "lon": 77.2662},
+        {"name": "Chadwick Falls Glen Woods", "type": "Waterfall", "lat": 31.1120, "lon": 77.1350},
+        {"name": "Tara Devi Hilltop Temple", "type": "Hilltop Shrine", "lat": 31.0680, "lon": 77.1320},
         {"name": "Green Valley Mashobra Cedar Forest", "type": "Nature Valley", "lat": 31.0967, "lon": 77.2284}
+    ],
+    "dharamshala": [
+        {"name": "Tsuglagkhang Dalai Lama Temple Complex", "type": "Tibetan Monastery", "lat": 32.2355, "lon": 76.3255},
+        {"name": "Bhagsu Waterfall & Bhagsunag Temple", "type": "Waterfall & Temple", "lat": 32.2470, "lon": 76.3350},
+        {"name": "Triund Mountain Ridge Trek", "type": "Alpine Trek", "lat": 32.2580, "lon": 76.3520},
+        {"name": "Namgyal Monastery & Tibetan Library", "type": "Spiritual Monastery", "lat": 32.2360, "lon": 76.3260},
+        {"name": "St. John in the Wilderness Church", "type": "Colonial Church", "lat": 32.2390, "lon": 76.3180},
+        {"name": "Norbulingka Institute Tibetan Arts", "type": "Cultural Center", "lat": 32.1750, "lon": 76.3450},
+        {"name": "Kangra Fort Historic Ramparts", "type": "Ancient Fort", "lat": 32.0980, "lon": 76.2550},
+        {"name": "Naddi Sunset Viewpoint Dhauladhar", "type": "Viewpoint", "lat": 32.2510, "lon": 76.3120}
+    ],
+    "kasol": [
+        {"name": "Chalal Riverside Nature Trail", "type": "Riverside Trek", "lat": 32.0120, "lon": 77.3220},
+        {"name": "Manikaran Sahib Gurudwara & Hot Springs", "type": "Spiritual Shrine", "lat": 32.0270, "lon": 77.3480},
+        {"name": "Tosh Village Alpine Meadows & Waterfall", "type": "Mountain Village", "lat": 32.0150, "lon": 77.4520},
+        {"name": "Kheerganga Trek & Sulfur Hot Springs", "type": "Hot Spring Trek", "lat": 31.9890, "lon": 77.5120},
+        {"name": "Malana Ancient Heritage Trail", "type": "Historic Village", "lat": 32.0620, "lon": 77.2650},
+        {"name": "Pulga Fairy Forest & Pine Glades", "type": "Pine Forest", "lat": 31.9980, "lon": 77.4420},
+        {"name": "Rasol Mountain Ridge Hike", "type": "Mountain Trek", "lat": 32.0280, "lon": 77.3180}
+    ],
+    "spiti-valley": [
+        {"name": "Key Monastery (Kye Gompa) Clifftop", "type": "Historic Monastery", "lat": 32.2980, "lon": 78.0120},
+        {"name": "Chandratal Lake (Moon Lake) Glacial Vista", "type": "High Altitude Lake", "lat": 32.4820, "lon": 77.6180},
+        {"name": "Dhankar Monastery & Fort Clifftop", "type": "Ancient Monastery", "lat": 32.0250, "lon": 78.2250},
+        {"name": "Hikkim World's Highest Post Office", "type": "Unique Landmark", "lat": 32.2210, "lon": 78.0850},
+        {"name": "Komic World's Highest Motorrable Village", "type": "Highland Village", "lat": 32.2150, "lon": 78.1020},
+        {"name": "Langza Giant Buddha Statue & Fossil Trail", "type": "Monument & Fossils", "lat": 32.2580, "lon": 78.0750},
+        {"name": "Kunzum Pass High Mountain Ridge", "type": "Mountain Pass", "lat": 32.3950, "lon": 77.6350},
+        {"name": "Pin Valley National Park & Mudh Village", "type": "National Park", "lat": 31.9520, "lon": 77.9250},
+        {"name": "Tabo Monastery Millenium Murals UNESCO", "type": "UNESCO Heritage", "lat": 32.0950, "lon": 78.3820},
+        {"name": "Chicham Suspension Bridge Gorge", "type": "Gorge Bridge", "lat": 32.3250, "lon": 77.9950}
+    ],
+    "dalhousie": [
+        {"name": "Khajjiar Mini Switzerland Meadow & Lake", "type": "Alpine Meadow", "lat": 32.5510, "lon": 76.0610},
+        {"name": "Dainkund Peak Singing Hill & Pohani Mata", "type": "Highest Peak Vista", "lat": 32.5320, "lon": 76.0350},
+        {"name": "Kalatop Wildlife Sanctuary Pine Forest", "type": "Wildlife Sanctuary", "lat": 32.5420, "lon": 76.0120},
+        {"name": "Panchpula Waterfall & Memorial Trail", "type": "Waterfall", "lat": 32.5290, "lon": 75.9890},
+        {"name": "St. John's Colonial Church Gandhi Chowk", "type": "Colonial Church", "lat": 32.5380, "lon": 75.9750},
+        {"name": "Chamera Lake Speed Boating & Dam", "type": "Lake Boating", "lat": 32.5950, "lon": 75.9520}
+    ],
+    "jibhi": [
+        {"name": "Jibhi Waterfall & Wooden Bridges", "type": "Waterfall", "lat": 31.6380, "lon": 77.3480},
+        {"name": "Jalori Pass High Alpine Ridge", "type": "Mountain Pass", "lat": 31.5360, "lon": 77.3750},
+        {"name": "Serolsar Lake & Budhi Nagin Temple Trek", "type": "Alpine Lake Trek", "lat": 31.5280, "lon": 77.4120},
+        {"name": "Chehni Kothi Ancient 1500-Year Fort Tower", "type": "Heritage Tower", "lat": 31.6420, "lon": 77.3550},
+        {"name": "Great Himalayan National Park (GHNP) River Trail", "type": "UNESCO National Park", "lat": 31.6850, "lon": 77.4520},
+        {"name": "Raghupur Fort Meadow & Ruins", "type": "Fort Ruins Trek", "lat": 31.5420, "lon": 77.3620},
+        {"name": "Chhoie Waterfall Trek Tirthan", "type": "Waterfall", "lat": 31.6490, "lon": 77.3820}
+    ],
+    "bir-billing": [
+        {"name": "Billing Paragliding Takeoff Point & Ridge", "type": "Aero Sports Takeoff", "lat": 32.0550, "lon": 76.7450},
+        {"name": "Chokling Tibetan Monastery", "type": "Monastery", "lat": 32.0420, "lon": 76.7150},
+        {"name": "Palpung Sherab Ling Monastery Bhattu", "type": "Forest Monastery", "lat": 32.0250, "lon": 76.6850},
+        {"name": "Bir Tea Factory & Tea Gardens", "type": "Tea Plantation", "lat": 32.0480, "lon": 76.7210},
+        {"name": "Deer Park Institute Meditation & Arts", "type": "Cultural Center", "lat": 32.0450, "lon": 76.7180},
+        {"name": "Bangoru Hidden Waterfall Trek", "type": "Waterfall", "lat": 32.0620, "lon": 76.7280},
+        {"name": "Baijnath Ancient Shiva Temple", "type": "Ancient Temple", "lat": 32.0510, "lon": 76.6480}
+    ],
+    "kinnaur": [
+        {"name": "Suicide Point Roghi Clifftop Viewpoint", "type": "Cliff Viewpoint", "lat": 31.5250, "lon": 78.2350},
+        {"name": "Kalpa Kinner Kailash Sunrise View", "type": "Sacred Peak Vista", "lat": 31.5380, "lon": 78.2580},
+        {"name": "Kamru Fort & Badrinath Temple Sangla", "type": "Historic Fort", "lat": 31.4250, "lon": 78.2650},
+        {"name": "Chitkul Last Inhabited Indian Village", "type": "Border Village", "lat": 31.3520, "lon": 78.4350},
+        {"name": "Baspa River Valley Meadow & Trout Streams", "type": "River Valley", "lat": 31.4150, "lon": 78.3120}
+    ],
+    "kullu": [
+        {"name": "Naggar Castle Historic Wooden Architecture", "type": "Historic Castle", "lat": 32.1380, "lon": 77.1720},
+        {"name": "Nicholas Roerich Art Gallery & Estate", "type": "Art Museum", "lat": 32.1410, "lon": 77.1750},
+        {"name": "Beas River White Water Rafting Pirdi", "type": "River Rafting", "lat": 31.9250, "lon": 77.1250},
+        {"name": "Bijli Mahadev Hilltop Shiva Temple", "type": "Hilltop Shrine", "lat": 31.9520, "lon": 77.1850},
+        {"name": "Great Himalayan Craft & Shawl Weaving Center", "type": "Artisan Craft", "lat": 31.9610, "lon": 77.1120}
+    ],
+    "kufri": [
+        {"name": "Mahasu Peak & Himalayan Nature Park", "type": "Nature Park & Peak", "lat": 31.0990, "lon": 77.2680},
+        {"name": "Mashobra Cedar Reserve Sanctuary", "type": "Cedar Forest", "lat": 31.1310, "lon": 77.2350},
+        {"name": "Fagu Apple Orchards Viewpoint", "type": "Viewpoint", "lat": 31.0890, "lon": 77.3020},
+        {"name": "Craignano Nature Park Mashobra", "type": "Heritage Park", "lat": 31.1350, "lon": 77.2280}
+    ],
+    "lahaul": [
+        {"name": "Sissu Waterfall & Chandra River Banks", "type": "Glacial Waterfall", "lat": 32.4810, "lon": 77.1210},
+        {"name": "Atal Tunnel North Portal", "type": "Mountain Portal", "lat": 32.4410, "lon": 77.1420},
+        {"name": "Keylong Kardang Monastery", "type": "Ancient Monastery", "lat": 32.5680, "lon": 77.0320},
+        {"name": "Gondhla Historic Fort Tower", "type": "Heritage Tower", "lat": 32.5020, "lon": 77.0850}
+    ],
+    "auli": [
+        {"name": "Auli Gorson Bugyal Meadow Trek", "type": "Alpine Meadow Trek", "lat": 30.5420, "lon": 79.5820},
+        {"name": "Auli Artificial Lake & Ski Slopes", "type": "Ski Slopes & Lake", "lat": 30.5280, "lon": 79.5650},
+        {"name": "Joshimath to Auli Ropeway Cable Car", "type": "Cable Car", "lat": 30.5550, "lon": 79.5680},
+        {"name": "Nanda Devi Peak Panoramic Viewpoint", "type": "Highest Peak Vista", "lat": 30.5350, "lon": 79.5750},
+        {"name": "Chattrakund Hidden Sweetwater Lake", "type": "Forest Lake", "lat": 30.5210, "lon": 79.5910}
+    ],
+    "nainital": [
+        {"name": "Naini Lake Boating & Yacht Club", "type": "Lake Boating", "lat": 29.3880, "lon": 79.4580},
+        {"name": "Naina Devi Sacred Lakeside Temple", "type": "Sacred Temple", "lat": 29.3950, "lon": 79.4520},
+        {"name": "Snow View Point & Himalayan Vista", "type": "Cable Car Viewpoint", "lat": 29.3980, "lon": 79.4620},
+        {"name": "Tiffin Top (Dorothy's Seat) Ridge", "type": "Mountain Vista", "lat": 29.3780, "lon": 79.4420},
+        {"name": "Eco Cave Gardens Rocky Trail", "type": "Natural Caves", "lat": 29.3910, "lon": 79.4450},
+        {"name": "Bhimtal Lake Island & Aquarium", "type": "Scenic Lake", "lat": 29.3480, "lon": 79.5520},
+        {"name": "Mukteshwar Himalayan Temple & Chauli Ki Jali", "type": "Cliff Viewpoint", "lat": 29.4720, "lon": 79.6480}
+    ],
+    "mussoorie": [
+        {"name": "Kempty Falls & Ropeway", "type": "Waterfall", "lat": 30.4950, "lon": 78.0280},
+        {"name": "Gun Hill Cable Car & Doon Valley View", "type": "Viewpoint", "lat": 30.4610, "lon": 78.0750},
+        {"name": "Lal Tibba Scenic High Peak", "type": "Highest Peak Vista", "lat": 30.4680, "lon": 78.0950},
+        {"name": "Camel's Back Road Nature Walk", "type": "Paved Nature Walk", "lat": 30.4580, "lon": 78.0710},
+        {"name": "Company Garden & Flower Cascades", "type": "Botanical Gardens", "lat": 30.4620, "lon": 78.0520},
+        {"name": "George Everest House & Peak", "type": "Heritage Ridge", "lat": 30.4550, "lon": 78.0210}
+    ],
+    "chopta": [
+        {"name": "Tungnath World's Highest Shiva Temple", "type": "Ancient Mountain Shrine", "lat": 30.4880, "lon": 79.2150},
+        {"name": "Chandrashila Summit Panoramic Ridge", "type": "Highest Peak Vista", "lat": 30.4950, "lon": 79.2280},
+        {"name": "Chopta Alpine Bugyals Meadows", "type": "Alpine Meadow", "lat": 30.4855, "lon": 79.1764},
+        {"name": "Deoria Tal Reflection Lake Trek", "type": "Forest Glacial Lake", "lat": 30.5210, "lon": 79.1280}
+    ],
+    "dawki": [
+        {"name": "Umngot River Crystal Clear Boat Ride", "type": "Glass Water River", "lat": 25.1878, "lon": 92.0186},
+        {"name": "Shnongpdeng River Camping & Kayaking", "type": "Riverside Adventure", "lat": 25.2150, "lon": 92.0420},
+        {"name": "Dawki Tamabil India-Bangladesh Border", "type": "Border Landmark", "lat": 25.1810, "lon": 92.0150},
+        {"name": "Burhill Living Waterfall", "type": "Waterfall", "lat": 25.2020, "lon": 92.0280}
+    ],
+    "jowai": [
+        {"name": "Krang Shuri Emerald Waterfall & Pool", "type": "Emerald Waterfall", "lat": 25.3420, "lon": 92.2980},
+        {"name": "Tyrshi Falls Terrace Fields View", "type": "Waterfall", "lat": 25.4620, "lon": 92.1750},
+        {"name": "Nartiang Monoliths Megalithic Park", "type": "Ancient Monoliths", "lat": 25.5780, "lon": 92.2150},
+        {"name": "Ialong Park Sacred Groves Vista", "type": "Eco Park", "lat": 25.4520, "lon": 92.2450}
+    ],
+    "kaziranga": [
+        {"name": "Kaziranga Central Kohora Elephant Safari", "type": "Rhino Wildlife Safari", "lat": 26.5775, "lon": 93.1711},
+        {"name": "Bagori Western Zone Jeep Safari", "type": "Wildlife Jeep Safari", "lat": 26.5820, "lon": 93.0850},
+        {"name": "Kaziranga National Orchid & Biodiversity Park", "type": "Orchid Park", "lat": 26.5910, "lon": 93.1850},
+        {"name": "Kakochang Waterfall Foothills Trek", "type": "Waterfall", "lat": 26.4950, "lon": 93.2850}
+    ],
+    "tawang": [
+        {"name": "Tawang Monastery (Galden Namgyal Lhatse)", "type": "Ancient Monastery", "lat": 27.5861, "lon": 91.8594},
+        {"name": "Sela Pass High Mountain Lake", "type": "Mountain Pass", "lat": 27.5020, "lon": 92.1020},
+        {"name": "Madhuri (Sangetsar) High Altitude Lake", "type": "Glacial Lake", "lat": 27.7120, "lon": 91.7850},
+        {"name": "Nuranang (Bong Bong) Waterfalls Jang", "type": "Towering Waterfall", "lat": 27.5850, "lon": 91.9820},
+        {"name": "Tawang War Memorial", "type": "Historic Memorial", "lat": 27.5890, "lon": 91.8680}
+    ],
+    "jaisalmer": [
+        {"name": "Jaisalmer Golden Sandstone Living Fort", "type": "UNESCO World Heritage Fort", "lat": 26.9124, "lon": 70.9128},
+        {"name": "Sam Sand Dunes Camel Safari & Sunset", "type": "Desert Dunes", "lat": 26.8320, "lon": 70.5120},
+        {"name": "Patwon Ki Haveli Carved Mansions", "type": "Heritage Architecture", "lat": 26.9150, "lon": 70.9160},
+        {"name": "Gadisar Lake & Historic Ghats", "type": "Sacred Lake", "lat": 26.9080, "lon": 70.9250},
+        {"name": "Kuldhara Haunted Ghost Village", "type": "Heritage Ruins", "lat": 26.8720, "lon": 70.7850},
+        {"name": "Tanot Mata Temple & Longewala Border", "type": "Border Shrine", "lat": 27.3150, "lon": 70.3520}
+    ],
+    "srinagar": [
+        {"name": "Dal Lake Shikara Boat Cruise & Houseboats", "type": "Alpine Lake Cruise", "lat": 34.0837, "lon": 74.8373},
+        {"name": "Mughal Gardens Shalimar Bagh & Nishat Bagh", "type": "Royal Mughal Gardens", "lat": 34.1480, "lon": 74.8720},
+        {"name": "Shankaracharya Hilltop Temple", "type": "Ancient Temple", "lat": 34.0750, "lon": 74.8450},
+        {"name": "Hazratbal Dargah Shrine", "type": "Sacred Shrine", "lat": 34.1280, "lon": 74.8410},
+        {"name": "Pari Mahal Palace of Fairies", "type": "Palace Garden", "lat": 34.0810, "lon": 74.8780},
+        {"name": "Indira Gandhi Memorial Tulip Garden", "type": "Tulip Botanical Park", "lat": 34.0910, "lon": 74.8690}
+    ],
+    "gulmarg": [
+        {"name": "Gulmarg Gondola Phase 1 & Phase 2 Cable Car", "type": "World's Highest Cable Car", "lat": 34.0484, "lon": 74.3805},
+        {"name": "Apharwat Peak Snow Ridge & Frozen Lake", "type": "Snow Peak Vista", "lat": 34.0250, "lon": 74.3350},
+        {"name": "St. Mary's Historic Church Meadow", "type": "Heritage Church", "lat": 34.0450, "lon": 74.3850},
+        {"name": "Strawberry Valley Nature Trail", "type": "Alpine Valley", "lat": 34.0580, "lon": 74.3920},
+        {"name": "Maharani Shiv Temple Gulmarg", "type": "Historic Shrine", "lat": 34.0490, "lon": 74.3820}
+    ],
+    "pahalgam": [
+        {"name": "Betaab Valley Alpine River Meadows", "type": "Scenic Valley", "lat": 34.0320, "lon": 75.2550},
+        {"name": "Aru Valley Scenic Village & Green Hills", "type": "Mountain Village", "lat": 34.0950, "lon": 75.2650},
+        {"name": "Baisaran Valley (Mini Switzerland of Kashmir)", "type": "Pine Meadow", "lat": 34.0220, "lon": 75.2150},
+        {"name": "Lidder River Trout Stream & Rafting", "type": "River Experience", "lat": 34.0150, "lon": 75.1920},
+        {"name": "Chandanwari Base Camp Glacier Trail", "type": "Glacier Trail", "lat": 34.0550, "lon": 75.3420}
+    ],
+    "leh-ladakh": [
+        {"name": "Pangong Tso High Altitude Blue Lake", "type": "Glacial Blue Lake", "lat": 33.7595, "lon": 78.6674},
+        {"name": "Nubra Valley Hunder Sand Dunes & Bactrian Camels", "type": "Cold Desert Dunes", "lat": 34.5820, "lon": 77.4750},
+        {"name": "Khardung La Pass World's Highest Road", "type": "High Mountain Pass", "lat": 34.2780, "lon": 77.6050},
+        {"name": "Thiksey Monastery (Mini Potala Palace)", "type": "Tibetan Gompa", "lat": 34.0580, "lon": 77.6670},
+        {"name": "Shanti Stupa White Dome Sunset View", "type": "Buddhist Stupa", "lat": 34.1680, "lon": 77.5750},
+        {"name": "Magnetic Hill Gravity Defying Slope", "type": "Geological Landmark", "lat": 34.1820, "lon": 77.3550},
+        {"name": "Leh Royal Palace & Namgyal Tsemo", "type": "Royal Palace Fort", "lat": 34.1650, "lon": 77.5850}
+    ],
+    "chikmagalur": [
+        {"name": "Mullayanagiri Highest Peak Trek", "type": "Highest Mountain Peak", "lat": 13.3910, "lon": 75.7210},
+        {"name": "Baba Budangiri Inam Dattatreya Peetha", "type": "Sacred Mountain Shrine", "lat": 13.4250, "lon": 75.7680},
+        {"name": "Hebbe Falls Jungle Jeep Trail", "type": "Waterfall", "lat": 13.5450, "lon": 75.7250},
+        {"name": "Coffee Museum & Plantation Estate", "type": "Coffee Agro Tourism", "lat": 13.3150, "lon": 75.7750},
+        {"name": "Z Point Kemmangundi Sunset Vista", "type": "Cliff Viewpoint", "lat": 13.5510, "lon": 75.7520},
+        {"name": "Bhadra Wildlife Sanctuary Safari", "type": "Wildlife Reserve", "lat": 13.6850, "lon": 75.6420}
+    ],
+    "varkala": [
+        {"name": "Varkala Red Cliff & North Beach", "type": "Coastal Cliff Beach", "lat": 8.7379, "lon": 76.7163},
+        {"name": "Janardhana Swamy 2000-Year Ancient Temple", "type": "Historic Temple", "lat": 8.7290, "lon": 76.7150},
+        {"name": "Kappil Beach & Edava Lake Estuary", "type": "Coastal Estuary", "lat": 8.7750, "lon": 76.6780},
+        {"name": "Papanasam Holy Beach Springs", "type": "Holy Spring Beach", "lat": 8.7320, "lon": 76.7120},
+        {"name": "Anjengo Historic Portuguese Fort & Lighthouse", "type": "Colonial Fort", "lat": 8.6810, "lon": 76.7620}
     ],
     "coorg": [
         {"name": "Abbey Falls Coffee Plantation Trail", "type": "Waterfall", "lat": 12.4542, "lon": 75.7185},
@@ -385,11 +582,24 @@ DESTINATION_ATTRACTIONS_DATABASE = {
 
 def _get_curated_destination_fallback(dest_name: str) -> list:
     """Finds curated fallback places matching the destination name strictly."""
+    if not dest_name:
+        return []
     dest_clean = dest_name.lower().strip().replace("-", " ")
+    
+    # 1. Exact or substring key match
     for key, places in DESTINATION_ATTRACTIONS_DATABASE.items():
         key_clean = key.replace("-", " ")
         if key_clean == dest_clean or key_clean in dest_clean or dest_clean in key_clean:
             return places
+
+    # 2. Token / word match for composite names (e.g. "Dharamshala & McLeodGanj" -> "dharamshala")
+    tokens = [t for t in re.split(r'[\s&/(),]+', dest_clean) if len(t) >= 3]
+    for key, places in DESTINATION_ATTRACTIONS_DATABASE.items():
+        key_tokens = [t for t in re.split(r'[\s&/(),-]+', key.lower()) if len(t) >= 3]
+        for token in tokens:
+            if token in key_tokens or any(token in kt for kt in key_tokens):
+                return places
+
     return []
 
 async def get_parent_location_details(lat: float, lon: float) -> tuple[str, str]:

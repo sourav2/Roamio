@@ -4,7 +4,7 @@ import ssl
 import urllib.request
 import urllib.parse
 import re
-from app.prompts.travel_prompts import SYSTEM_PROMPT_ITINERARY, SYSTEM_PROMPT_SEARCH_EXTRACTION
+from app.prompts.travel_prompts import SYSTEM_PROMPT_CHAT, SYSTEM_PROMPT_ITINERARY, SYSTEM_PROMPT_SEARCH_EXTRACTION
 from app.utils.logger import get_logger
 
 logger = get_logger("app.services.gemini_service")
@@ -26,12 +26,85 @@ def _clean_geographic_entity(val: str | None) -> str | None:
 
 class GeminiService:
     def __init__(self):
-        self.api_key = os.getenv("GEMINI_API_KEY")
-        if not self.api_key:
-            # Try VITE_GEMINI_API_KEY as fallback
-            self.api_key = os.getenv("VITE_GEMINI_API_KEY")
-        
-        self.url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={self.api_key}"
+        self.api_key = (
+            os.getenv("GEMINI_API_KEY") or 
+            os.getenv("GOOGLE_API_KEY") or 
+            os.getenv("VITE_GEMINI_API_KEY")
+        )
+        if self.api_key:
+            logger.info("Gemini AI active (Gemini 2.5 Flash initialized with GEMINI_API_KEY).")
+            self.url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={self.api_key}"
+        else:
+            logger.warning("GEMINI_API_KEY is missing. Using fallback mock travel engine.")
+            self.url = None
+
+    async def get_chat_response(self, messages: list) -> str:
+        """
+        Sends the message history to Gemini 2.5 Flash, or returns a conversational mock reply if API key is missing/fails.
+        """
+        logger.info(f"Gemini Service: Received chat request with {len(messages)} messages.")
+        if self.api_key and self.url:
+            try:
+                contents = []
+                for msg in messages:
+                    role = msg.get("role", "user")
+                    gemini_role = "model" if role in ("assistant", "model") else "user"
+                    contents.append({
+                        "role": gemini_role,
+                        "parts": [{"text": str(msg.get("content", ""))}]
+                    })
+                
+                payload = {
+                    "contents": contents,
+                    "systemInstruction": {
+                        "parts": [{"text": SYSTEM_PROMPT_CHAT}]
+                    },
+                    "generationConfig": {
+                        "temperature": 0.7,
+                        "maxOutputTokens": 1000
+                    }
+                }
+
+                req_data = json.dumps(payload).encode("utf-8")
+                req = urllib.request.Request(
+                    self.url,
+                    data=req_data,
+                    headers={"Content-Type": "application/json"},
+                    method="POST"
+                )
+                ctx = ssl.create_default_context()
+                ctx.check_hostname = False
+                ctx.verify_mode = ssl.CERT_NONE
+
+                with urllib.request.urlopen(req, context=ctx, timeout=30) as response:
+                    resp_data = json.loads(response.read().decode("utf-8"))
+                    candidates = resp_data.get("candidates", [])
+                    if candidates:
+                        text_content = candidates[0].get("content", {}).get("parts", [{}])[0].get("text", "")
+                        if text_content:
+                            logger.info("Successfully received Gemini chat response.")
+                            return text_content.strip()
+            except Exception as e:
+                logger.error(f"Gemini chat API call failed: {e}. Falling back to mock chat response.", exc_info=True)
+
+        last_message = messages[-1]["content"] if messages else ""
+        return self._generate_mock_chat_response(last_message, messages)
+
+    def _generate_mock_chat_response(self, last_message: str, messages: list) -> str:
+        q_lower = (last_message or "").lower()
+        if "budget" in q_lower or "cost" in q_lower or "price" in q_lower:
+            return "I can help customize your budget! Roamio allows you to set your budget per person and choose between Budget, Moderate, and Luxury tiers. Where would you like to travel?"
+        elif "hotel" in q_lower or "stay" in q_lower:
+            return "We recommend verified stays ranging from boutique homestays to premium luxury resorts tailored to your travel route. Which destination are you planning for?"
+        elif "route" in q_lower or "distance" in q_lower or "how to reach" in q_lower:
+            return "Roamio automatically computes the fastest road and scenic transit routes between your origin and destination stops. You can view the dynamic map on the Planner page!"
+        elif "meghalaya" in q_lower or "shillong" in q_lower:
+            return "Meghalaya is a stunning destination! Popular spots include Umiam Lake, Elephant Falls, Cherrapunji's living root bridges, and Dawki's crystal clear river. Would you like a 3-day or 5-day itinerary?"
+        elif "himachal" in q_lower or "manali" in q_lower or "shimla" in q_lower:
+            return "Himachal Pradesh offers incredible mountain landscapes! Manali and Shimla are top destination hubs with snow viewpoints, paragliding in Solang, and Mall Road heritage. How many days are you planning?"
+        else:
+            return "Hello! I am Roamio's AI travel consultant. Tell me where you'd like to go, your preferred travel duration, budget, or travel style, and I'll help plan your complete itinerary!"
+
     async def generate_itinerary(
         self, 
         dest: str, 
@@ -43,9 +116,9 @@ class GeminiService:
         real_places: list = None
     ) -> dict | None:
         """
-        Generates structured JSON itinerary based on user preferences using Gemini 1.5 Flash.
+        Generates structured JSON itinerary based on user preferences using Gemini 2.5 Flash.
         """
-        if not self.api_key:
+        if not self.api_key or not self.url:
             logger.warning("Gemini Service initialized without an API key. Skipping Gemini generation.")
             return None
 
@@ -53,7 +126,7 @@ class GeminiService:
         
         places_context = ""
         if real_places:
-            places_context = "\n".join([f"- Name: {p['name']}. Summary: {p['summary']}" for p in real_places[:6]])
+            places_context = "\n".join([f"- Name: {p.get('name')}. Summary: {p.get('summary', '')}" for p in real_places[:8]])
         else:
             places_context = "No nearby places context available."
 
@@ -71,7 +144,6 @@ class GeminiService:
         Do not invent other cities or geographic locations outside {dest} and its surroundings.
         """
 
-        # Construct payload for Gemini API
         payload = {
             "contents": [
                 {
@@ -105,7 +177,6 @@ class GeminiService:
                 method="POST"
             )
             
-            # Disable SSL verification for development environments (following local patterns)
             ctx = ssl.create_default_context()
             ctx.check_hostname = False
             ctx.verify_mode = ssl.CERT_NONE
@@ -114,7 +185,6 @@ class GeminiService:
             with urllib.request.urlopen(req, context=ctx, timeout=45) as response:
                 resp_data = json.loads(response.read().decode("utf-8"))
                 
-                # Extract text from response
                 candidates = resp_data.get("candidates", [])
                 if not candidates:
                     logger.error(f"Gemini API returned no candidates: {resp_data}")
@@ -125,7 +195,6 @@ class GeminiService:
                     logger.error(f"Gemini API returned empty text: {resp_data}")
                     return None
                 
-                # Clean potential markdown wrapping
                 cleaned_text = text_content.strip()
                 if cleaned_text.startswith("```json"):
                     cleaned_text = cleaned_text[7:]
@@ -147,9 +216,9 @@ class GeminiService:
         """
         Extracts structured travel preferences from natural language query using Gemini 2.5 Flash.
         """
-        if not self.api_key:
-            logger.warning("Gemini Service initialized without an API key.")
-            raise ValueError("GEMINI_API_KEY is not configured on the backend.")
+        if not self.api_key or not self.url:
+            logger.info(f"GEMINI_API_KEY not set. Using resilient rule-based preference extraction for query: '{query}'")
+            return self._fallback_extract_preferences(query)
 
         logger.info(f"Gemini Service: Extracting travel preferences for query: '{query}'")
 
@@ -199,12 +268,12 @@ class GeminiService:
                 candidates = resp_data.get("candidates", [])
                 if not candidates:
                     logger.error(f"Gemini API returned no candidates: {resp_data}")
-                    raise ValueError("No candidates returned from Gemini API")
+                    return self._fallback_extract_preferences(query)
                 
                 text_content = candidates[0].get("content", {}).get("parts", [{}])[0].get("text", "")
                 if not text_content:
                     logger.error(f"Gemini API returned empty text: {resp_data}")
-                    raise ValueError("Empty text returned from Gemini API")
+                    return self._fallback_extract_preferences(query)
                 
                 cleaned_text = text_content.strip()
                 if cleaned_text.startswith("```json"):
@@ -232,7 +301,6 @@ class GeminiService:
             return self._fallback_extract_preferences(query)
 
     def _fallback_extract_preferences(self, query: str) -> dict:
-        import re
         q = query.strip()
         lower = q.lower()
 
@@ -250,7 +318,6 @@ class GeminiService:
         region = None
         location = None
 
-        # Check for destination patterns: "nearby X", "places near X", "close to X", "around X", "in X", "to X", "visit X", etc.
         dest_match = re.search(
             r'\b(?:destinations?\s+(?:in|to|at|near|around|close\s+to)|places?\s+(?:in|to|at|near|around|close\s+to)|trip\s+(?:in|to|around|near)|nearby|close\s+to|around|in|to|visit)\s+([a-zA-Z\s]+?)(?:\s+(?:for|from|with|and|\d|$)|$)',
             q,
@@ -262,7 +329,6 @@ class GeminiService:
             if cleaned_cand:
                 destination = cleaned_cand
 
-        # Check for explicit origin patterns: "from X", "starting at X", "starting from X"
         loc_match = re.search(r'\b(?:from|starting\s+(?:at|from))\s+([a-zA-Z\s]+?)(?:\s+(?:for|in|to|with|and|\d|$)|$)', q, re.I)
         if loc_match:
             cand = loc_match.group(1).strip()
@@ -270,7 +336,6 @@ class GeminiService:
             if cleaned_cand:
                 location = cleaned_cand
 
-        # If neither pattern matched, clean up query and extract entity
         if not destination and not location:
             clean_q = re.sub(r'^(?:find|show|give|search|explore|good|best|some|top|places?|destinations?|a\s+place|\s)+', '', lower, flags=re.I).strip()
             cleaned_dest = _clean_geographic_entity(clean_q)
@@ -280,7 +345,6 @@ class GeminiService:
         destination = _clean_geographic_entity(destination)
         location = _clean_geographic_entity(location)
 
-        # Normalize region
         if destination:
             for kr in known_regions:
                 if kr.lower() == destination.lower():
@@ -296,7 +360,6 @@ class GeminiService:
                     location = None
                     break
 
-        # Travellers
         travellers = None
         if re.search(r'\bsolo\b', lower):
             travellers = 1
@@ -308,7 +371,6 @@ class GeminiService:
                 val = t_match.group(1).lower()
                 travellers = word_to_num.get(val, int(val) if val.isdigit() else 2)
 
-        # Duration
         duration = None
         if re.search(r'\bweekend\b', lower):
             duration = 2
@@ -318,7 +380,6 @@ class GeminiService:
                 val = d_match.group(1).lower()
                 duration = word_to_num.get(val, int(val) if val.isdigit() else 2)
 
-        # Budget
         budget = None
         b_match = re.search(r'(?:under|below|within|budget\s+(?:of)?|₹|rs\.?|inr)\s*(\d+[\d,]*)(?:\s*(?:k|thousand))?', lower)
         if b_match:
@@ -328,7 +389,6 @@ class GeminiService:
                 val *= 1000
             budget = val
 
-        # Preferences (strictly explicit)
         preferences = []
         if re.search(r'\badventure\b', lower):
             preferences.append("adventure")
@@ -354,4 +414,3 @@ class GeminiService:
             "travel_mode": None,
             "preferences": preferences
         }
-

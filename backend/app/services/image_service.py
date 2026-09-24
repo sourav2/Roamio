@@ -12,13 +12,13 @@ logger = get_logger("app.services.image")
 UNSPLASH_ONLINE = True
 
 USED_IMAGES = set()
-USED_IMAGES_LOCK = threading.Lock()
+USED_IMAGES_LOCK = threading.RLock()
 
 IMAGE_CACHE = {}
-IMAGE_CACHE_LOCK = threading.Lock()
+IMAGE_CACHE_LOCK = threading.RLock()
 
 UNSPLASH_BLOCKED = False
-UNSPLASH_BLOCKED_LOCK = threading.Lock()
+UNSPLASH_BLOCKED_LOCK = threading.RLock()
 
 CACHE_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "image_cache.json")
 
@@ -145,22 +145,25 @@ def load_cache():
                 with IMAGE_CACHE_LOCK:
                     IMAGE_CACHE.update(sanitized_data)
             logger.info(f"Loaded {len(IMAGE_CACHE)} cached image URLs from {CACHE_FILE}")
-            # Persist sanitized cache immediately
-            save_cache()
     except Exception as e:
-        logger.error(f"Failed to load image cache: {e}")
+        logger.warning(f"Could not load image cache from disk: {e}")
 
 def save_cache():
+    # In Vercel serverless / read-only environments, avoid writing to read-only app directory
+    is_serverless = bool(os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME") or os.getenv("VERCEL_ENV"))
+    if is_serverless:
+        return
     try:
         with IMAGE_CACHE_LOCK:
             data_to_save = dict(IMAGE_CACHE)
         with open(CACHE_FILE, "w", encoding="utf-8") as f:
             json.dump(data_to_save, f, indent=2, ensure_ascii=False)
-        logger.info(f"Saved image cache to {CACHE_FILE}")
+    except (OSError, PermissionError, IOError) as e:
+        logger.debug(f"Skipping image cache write on read-only filesystem: {e}")
     except Exception as e:
-        logger.error(f"Failed to save image cache: {e}")
+        logger.warning(f"Non-critical image cache save failure: {e}")
 
-# Load the cache persistently on startup
+# Load the cache on startup
 load_cache()
 
 def normalize_attraction_name(name: str) -> str:
@@ -450,11 +453,13 @@ def search_unsplash_only(q_search: str, category: str = "") -> str | None:
                                     return img_url
     except urllib.error.HTTPError as e:
         logger.error(f"Unsplash NAPI search failed: {e}")
-        if e.code in (401, 403):
+        if e.code in (401, 403, 429):
             with UNSPLASH_BLOCKED_LOCK:
                 UNSPLASH_BLOCKED = True
     except Exception as e:
         logger.error(f"Unsplash NAPI search failed: {e}")
+        with UNSPLASH_BLOCKED_LOCK:
+            UNSPLASH_BLOCKED = True
         
     return None
 

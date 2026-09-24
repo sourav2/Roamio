@@ -1,9 +1,7 @@
-# pyrefly: ignore [missing-import]
 from fastapi import APIRouter, Depends, HTTPException
-# pyrefly: ignore [missing-import]
 from pydantic import BaseModel
 from typing import List
-from app.services.openai_service import OpenAIService
+from app.services.gemini_service import GeminiService
 from app.utils.logger import get_logger
 
 logger = get_logger("app.routes.chat")
@@ -16,12 +14,12 @@ class Message(BaseModel):
 class ChatRequest(BaseModel):
     messages: List[Message]
 
-# Dependency injection for OpenAI Service
-def get_openai_service():
-    return OpenAIService()
+# Dependency injection for Gemini Service
+def get_gemini_service():
+    return GeminiService()
 
 @router.post("/chat")
-async def chat_endpoint(request: ChatRequest, service: OpenAIService = Depends(get_openai_service)):
+async def chat_endpoint(request: ChatRequest, service: GeminiService = Depends(get_gemini_service)):
     logger.info("POST /api/chat endpoint called.")
     try:
         # Convert Pydantic models to dicts
