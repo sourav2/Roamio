@@ -4,8 +4,8 @@ import React from 'react';
  * Roamio Material Design-Style Slider Component
  * 
  * Shared slider component for Trip Duration, Budget, and any continuous or stepped controls:
- * - Material 3-style rounded track with active (#164A3A) and inactive (#D6E0DA) segments
- * - Material 3-style vertical capsule pill thumb handle (#164A3A, w-[5px] x h-[18px])
+ * - Material 3-style rounded track with active (#176B53) and inactive (#D6E0DA) segments
+ * - Material 3-style vertical capsule pill thumb handle (#176B53, w-[5px] x h-[18px])
  * - Subtle end-cap stop indicator dot
  * - Full accessibility with transparent native range input layer
  */

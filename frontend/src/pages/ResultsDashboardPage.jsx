@@ -5,6 +5,7 @@ import MiddleDiscoverySection from '../components/discovery/MiddleDiscoverySecti
 import RightSidePanel from '../components/RightSidePanel';
 import { DEFAULT_FILTER_STATE } from '../config/filterConfig';
 import { fetchRecommendedDestinations, getDiscoveryMetrics } from '../services/recommendationService';
+import { TimeoutWarningBanner } from '../components/skeleton/DashboardSkeleton';
 
 /**
  * Roamio Results Dashboard Page
@@ -40,19 +41,35 @@ export default function ResultsDashboardPage({
 
   const [destinations, setDestinations] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showTimeoutWarning, setShowTimeoutWarning] = useState(false);
+
+  // Monitor loading duration for optional timeout alert banner matching Figma
+  useEffect(() => {
+    let timer = null;
+    if (isLoading) {
+      timer = setTimeout(() => {
+        setShowTimeoutWarning(true);
+      }, 4500);
+    } else {
+      setShowTimeoutWarning(false);
+    }
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [isLoading]);
 
   const handleFilterUpdate = (updated) => {
     setInternalFilterState((prev) => ({ ...prev, ...updated }));
     if (onFilterChange) onFilterChange(updated);
   };
 
-  useEffect(() => {
+  const executeSearch = (filtersToUse = activeFilters) => {
     // 1. Check if an input has unselected typed text currently pending
-    const isLocationPending = Boolean(activeFilters.locationTyped && !activeFilters.location);
+    const isLocationPending = Boolean(filtersToUse.locationTyped && !filtersToUse.location);
     const isDestinationPending = Boolean(
-      activeFilters.destinationTyped &&
-      activeFilters.destinationTyped.trim().toLowerCase() !== 'any destination' &&
-      !activeFilters.destination
+      filtersToUse.destinationTyped &&
+      filtersToUse.destinationTyped.trim().toLowerCase() !== 'any destination' &&
+      !filtersToUse.destination
     );
 
     if (isLocationPending || isDestinationPending) {
@@ -61,49 +78,34 @@ export default function ResultsDashboardPage({
     }
 
     // 2. Must have at least a location, destination, or region
-    const hasOrigin = Boolean(activeFilters.location && activeFilters.location.trim());
-    const hasDest = Boolean(activeFilters.destination && activeFilters.destination.trim() && activeFilters.destination.trim().toLowerCase() !== 'any destination');
-    const hasRegion = Boolean(activeFilters.region && activeFilters.region.trim());
+    const hasOrigin = Boolean(filtersToUse.location && filtersToUse.location.trim());
+    const hasDest = Boolean(filtersToUse.destination && filtersToUse.destination.trim() && filtersToUse.destination.trim().toLowerCase() !== 'any destination');
+    const hasRegion = Boolean(filtersToUse.region && filtersToUse.region.trim());
 
     if (!hasOrigin && !hasDest && !hasRegion) {
       console.log('[ResultsDashboard] Skipping recommendation fetch: no location or destination provided');
       return;
     }
 
-    let isMounted = true;
     setIsLoading(true);
+    setShowTimeoutWarning(false);
 
-    fetchRecommendedDestinations(activeFilters)
+    fetchRecommendedDestinations(filtersToUse)
       .then((results) => {
-        if (isMounted) {
-          setDestinations(results || []);
-          setIsLoading(false);
-        }
+        setDestinations(results || []);
+        setIsLoading(false);
       })
       .catch((err) => {
-        if (isMounted) {
-          console.error('[ResultsDashboard] Error fetching backend recommendations:', err);
-          setDestinations([]);
-          setIsLoading(false);
-        }
+        console.error('[ResultsDashboard] Error fetching backend recommendations:', err);
+        setDestinations([]);
+        setIsLoading(false);
       });
+  };
 
-    return () => {
-      isMounted = false;
-    };
-  }, [
-    activeFilters.location,
-    activeFilters.destination,
-    activeFilters.locationTyped,
-    activeFilters.destinationTyped,
-    activeFilters.region,
-    activeFilters.duration,
-    activeFilters.budget,
-    activeFilters.travellers,
-    activeFilters.travellerCount,
-    JSON.stringify(activeFilters.selectedTripTypes || activeFilters.tripTypes || []),
-    JSON.stringify(activeFilters.preferences || []),
-  ]);
+  // Initial mount search only
+  useEffect(() => {
+    executeSearch(activeFilters);
+  }, []);
 
   const discoveryMetrics = getDiscoveryMetrics(activeFilters, destinations);
 
@@ -113,28 +115,41 @@ export default function ResultsDashboardPage({
       {/* 1. DASHBOARD HEADER */}
       <DashboardHeader
         onNavigateHome={() => setCurrentPage && setCurrentPage('home')}
-        onSearch={(q) => {
+        onSearch={async (q) => {
           console.log('[ResultsDashboard] AI Search submitted:', q);
-          if (onSearchQuery) onSearchQuery(q);
+          if (onSearchQuery) {
+            await onSearchQuery(q);
+            executeSearch(activeFilters);
+          }
         }}
         onNavigateSaved={onNavigateSaved}
       />
 
       {/* 2. MAIN 3-COLUMN DASHBOARD CONTENT */}
       <main className="flex-1 w-full max-w-[1720px] mx-auto px-roamio-4 sm:px-roamio-6 py-roamio-5">
+        
+        {/* Optional Timeout Warning Alert (Figma Reference Top Banner) */}
+        {isLoading && showTimeoutWarning && (
+          <div className="mb-4">
+            <TimeoutWarningBanner onCancel={() => setIsLoading(false)} />
+          </div>
+        )}
+
         <div className="flex flex-col lg:flex-row gap-roamio-4 items-start w-full">
           
           {/* COLUMN 1: LEFT FILTERS PANEL */}
           <FiltersPanel
             title="Filters"
-            submitLabel="Submit"
+            submitLabel="Find Destination"
             isCard={true}
             initialValues={activeFilters}
             onChange={handleFilterUpdate}
+            onReset={handleFilterUpdate}
             className="w-full lg:w-[320px] xl:w-[340px] shrink-0"
             onSubmit={(filters) => {
-              console.log('[ResultsDashboard] Filters submitted:', filters);
+              console.log('[ResultsDashboard] Find Destination clicked:', filters);
               handleFilterUpdate(filters);
+              executeSearch(filters);
             }}
           />
 
@@ -165,6 +180,7 @@ export default function ResultsDashboardPage({
             onSelectDay={onSelectDay}
             destinationsByDay={destinationsByDay}
             onRemoveDestination={onRemoveDestination}
+            isLoading={isLoading}
             className="w-full lg:w-[360px] xl:w-[380px] shrink-0"
             onReviewPlan={() => onSavePlan?.({
               filters: activeFilters,

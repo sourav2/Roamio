@@ -90,11 +90,11 @@ function BudgetDonutChart({ total = '₹0', categories = [] }) {
  *   - Dynamic Day Selector (Day 1 - Day N based on tripDuration)
  *   - Selected day utilizes Light Button token (#46B392)
  *   - Destination list belonging to individual days (Tiger Hill card)
- *   - "Add more Destinations" & "Save Plan" (Primary Accent #164A3A)
+ *   - "Add more Destinations" & "Save Plan" (Primary Accent #176B53)
  * - Budget Breakdown View:
  *   - Circular Donut Chart with total estimate & 4 categories
  *   - Itemized legend breakdown
- *   - "View Breakdown" button (Primary Accent #164A3A)
+ *   - "View Breakdown" button (Primary Accent #176B53)
  *   - AI Recommendations card
  */
 export default function RightSidePanel({
@@ -102,6 +102,7 @@ export default function RightSidePanel({
   travellerCount = 1,
   initialView = 'itinerary', // 'itinerary' | 'budget'
   className = '',
+  isLoading = false,
   onReviewPlan,
   onViewBreakdown,
   onAddMoreDestinations,
@@ -148,6 +149,48 @@ export default function RightSidePanel({
   const currentDayDestinations = destinationsByDay[selectedDay] || [];
   const { cost, totalTime } = calculateItineraryTotals(destinationsByDay, travellerCount);
   const dynamicBudget = calculateDynamicBudgetCategories(destinationsByDay, travellerCount);
+
+  if (isLoading) {
+    return (
+      <aside className={`w-full max-w-[400px] flex flex-col gap-4 font-roamio-body text-left ${className}`.trim()}>
+        {/* Top title & subtitle lines */}
+        <div className="space-y-2 pt-1">
+          <div className="h-4 w-44 bg-[#DFE5E2] rounded-full roamio-shimmer" />
+          <div className="h-5 w-28 bg-[#DFE5E2] rounded-full roamio-shimmer" />
+        </div>
+
+        {/* Day selector tabs skeleton */}
+        <div className="flex items-center gap-2 pt-1">
+          <div className="h-7 w-12 bg-[#DFE5E2] rounded-full roamio-shimmer" />
+          <div className="h-7 w-12 bg-[#DFE5E2] rounded-full roamio-shimmer" />
+          <div className="h-7 w-12 bg-[#DFE5E2] rounded-full roamio-shimmer" />
+        </div>
+
+        {/* 5 Sub-filter tag pills */}
+        <div className="flex items-center gap-1.5 pt-1">
+          {[0, 1, 2, 3, 4].map((i) => (
+            <div key={i} className="h-5 w-8 bg-[#DFE5E2] rounded-full roamio-shimmer" />
+          ))}
+        </div>
+
+        {/* Selected destination / attraction card skeleton */}
+        <div className="border border-[#E5E7EB] rounded-roamio-2 p-3 flex items-center gap-3 bg-white shadow-2xs">
+          <div className="w-14 h-14 bg-[#DFE5E2] rounded-roamio-1 roamio-shimmer shrink-0" />
+          <div className="flex-1 space-y-1.5 min-w-0">
+            <div className="h-3 w-32 bg-[#DFE5E2] rounded-full roamio-shimmer" />
+            <div className="h-2.5 w-28 bg-[#DFE5E2] rounded-full roamio-shimmer" />
+            <div className="h-2 w-20 bg-[#DFE5E2] rounded-full roamio-shimmer" />
+          </div>
+        </div>
+
+        {/* Bottom budget breakdown skeleton bars */}
+        <div className="space-y-2 pt-2">
+          <div className="h-6 w-full bg-[#DFE5E2] rounded-full roamio-shimmer" />
+          <div className="h-6 w-full bg-[#DFE5E2] rounded-full roamio-shimmer" />
+        </div>
+      </aside>
+    );
+  }
 
   return (
     <aside className={`w-full max-w-[400px] flex flex-col gap-roamio-4 font-roamio-body text-left ${className}`.trim()}>

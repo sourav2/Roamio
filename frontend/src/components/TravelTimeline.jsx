@@ -12,13 +12,13 @@ export default function TravelTimeline({ timeline, currency = 'INR' }) {
         <div key={dayIdx} className="relative">
           
           {/* Timeline Dot Indicator */}
-          <span className="absolute -left-[25px] top-0 flex h-4 w-4 items-center justify-center rounded-full bg-travel-button-blue ring-4 ring-travel-bg-gray">
+          <span className="absolute -left-[25px] top-0 flex h-4 w-4 items-center justify-center rounded-full bg-roamio-primary-accent ring-4 ring-travel-bg-gray">
             <span className="h-1.5 w-1.5 rounded-full bg-white" />
           </span>
 
           {/* Day Title */}
           <div className="mb-3">
-            <span className="inline-flex items-center gap-1 rounded bg-travel-accent-blue px-2 py-0.5 text-3xs font-bold uppercase tracking-wider text-travel-button-blue">
+            <span className="inline-flex items-center gap-1 rounded bg-roamio-primary-accent/10 px-2 py-0.5 text-3xs font-bold uppercase tracking-wider text-roamio-primary-accent">
               Day {dayItem.day}
             </span>
             <h5 className="text-2xs font-bold text-travel-text-primary mt-1">

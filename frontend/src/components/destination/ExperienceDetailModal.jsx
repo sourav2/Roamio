@@ -62,7 +62,7 @@ export default function ExperienceDetailModal({
 
         {/* 2. Scrollable Modal Content */}
         <div className="p-roamio-5 sm:p-roamio-6 space-y-roamio-5 text-left">
-          
+
           {/* Title & Add to Trip Action Row */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-roamio-3">
             <div>
@@ -102,7 +102,7 @@ export default function ExperienceDetailModal({
 
           {/* 3-Column Experience Details Section */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-roamio-4 sm:gap-roamio-6 pt-roamio-1 border-t border-roamio-divider/60 pt-roamio-4">
-            
+
             {/* COLUMN 1: Top Attractions */}
             <div className="md:col-span-5 space-y-2">
               <h3 className="roamio-h6 font-bold text-roamio-text-primary">

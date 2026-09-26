@@ -4,7 +4,7 @@ import React from 'react';
  * Roamio Tabs Component
  * 
  * Reusable tab navigation:
- * - Active: Primary Accent (#164A3A) border and text
+ * - Active: Primary Accent (#176B53) border and text
  * - Inactive: Text Secondary (#5B6660), Hover: Text Primary (#1C2420)
  * - Stroke: 2px active indicator
  * - Variants: 'line' (standard underline) and 'pills'

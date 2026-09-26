@@ -36,8 +36,8 @@ export const roamioTokens = {
       infoBg: '#EEF8FA',
     },
     primary: {
-      accent: '#164A3A',
-      accentHover: '#0E3227',
+      accent: '#176B53',
+      accentHover: '#00513D',
     },
     lightButton: {
       default: '#46B392',

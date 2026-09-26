@@ -40,8 +40,8 @@ export default {
             'info-bg': '#EEF8FA',
           },
           primary: {
-            accent: '#164A3A',
-            hover: '#0E3227',
+            accent: '#176B53',
+            hover: '#00513D',
           },
           'btn-light': {
             DEFAULT: '#46B392',
@@ -61,13 +61,13 @@ export default {
 
         // Legacy SoraPath Theme Colors (Preserved for compatibility)
         brand: {
-          green: '#16A34A',
+          green: '#176B53',
           dark: '#111111',
           text: '#111827',
           muted: '#6B7280',
           softBg: '#F8FAF8',
           borders: '#E5E7EB',
-          success: '#22C55E',
+          success: '#2F9E6F',
           warning: '#F59E0B',
           danger: '#EF4444',
         },
@@ -85,8 +85,8 @@ export default {
           button: {
             dark: '#111111',
             darkHover: '#1F2937',
-            blue: '#16A34A',
-            blueHover: '#15803D'
+            blue: '#176B53',
+            blueHover: '#00513D'
           },
           accent: {
             blue: '#E8F5E9',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Clock, Wallet, Sun } from 'lucide-react';
+import { Route, Clock, Wallet, Sun, Compass } from 'lucide-react';
 import DiscoveryMap from './DiscoveryMap';
 import meghalayaImg from '../../assets/images/Meghalaya.jpg';
 
@@ -174,6 +174,66 @@ export default function MiddleDiscoverySection({
       ? `Start: ${startCity}`
       : `All Destinations`;
 
+  if (isLoading) {
+    return (
+      <section className={`flex-1 flex flex-col gap-roamio-4 min-w-0 ${className}`.trim()}>
+        {/* 1. AI SYNTHESIS LOADING CARD (Matching Figma Reference) */}
+        <div className="w-full flex flex-col items-center justify-center p-6 sm:p-7 bg-[#F4FAF7] border border-[#73C2A6] rounded-roamio-2 text-center shadow-2xs">
+          <div className="relative mb-3 flex h-13 w-13 items-center justify-center rounded-full bg-roamio-primary-accent text-white shadow-md">
+            <Compass className="h-6.5 w-6.5 animate-spin" style={{ animationDuration: '4s' }} />
+          </div>
+          <h3 className="roamio-body-md font-bold text-roamio-primary-accent mb-1">
+            Synthesizing Your Custom Trip
+          </h3>
+          <p className="roamio-body-xs font-semibold text-roamio-btn-light">
+            Finding destinations......
+          </p>
+        </div>
+
+        {/* 2. DISCOVERY METRICS SKELETON (4 Columns matching Figma) */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-1 text-left">
+          {[0, 1, 2, 3].map((idx) => (
+            <div key={idx} className="flex flex-col gap-1.5">
+              <div className="h-3 w-16 bg-[#DFE5E2] rounded-full roamio-shimmer" />
+              <div className="h-5 w-20 bg-[#DFE5E2] rounded-full roamio-shimmer" />
+            </div>
+          ))}
+        </div>
+
+        {/* 3. DISCOVERY MAP SKELETON (Left to Right continuous shimmer) */}
+        <div className="relative w-full h-[400px] sm:h-[440px] rounded-roamio-3 overflow-hidden border border-roamio-border-light bg-[#DFE5E2] roamio-map-shimmer">
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
+            <Compass className="h-12 w-12 text-[#176B53]" />
+          </div>
+        </div>
+
+        {/* 4. SUGGESTED DESTINATIONS SKELETON (3-Column x 2-Row Card Grid matching Figma) */}
+        <div className="space-y-roamio-3 text-left pt-roamio-1">
+          <div className="h-4 w-36 bg-[#DFE5E2] rounded-full roamio-shimmer mb-2" />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-roamio-2">
+            {[0, 1, 2, 3, 4, 5].map((idx) => (
+              <div
+                key={idx}
+                className="bg-white border border-[#E5E7EB] rounded-roamio-2 p-4 h-[105px] flex flex-col justify-between shadow-2xs"
+              >
+                <div className="space-y-2">
+                  <div className="h-3.5 w-24 bg-[#DFE5E2] rounded-full roamio-shimmer" />
+                  <div className="h-4 w-32 bg-[#CBD5E1] rounded-full roamio-shimmer" />
+                </div>
+                <div className="flex justify-end">
+                  <div className="w-3.5 h-3.5 rounded-full bg-[#DFE5E2] roamio-shimmer" />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="h-3.5 w-28 bg-[#DFE5E2] rounded-full roamio-shimmer mt-2" />
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className={`flex-1 flex flex-col gap-roamio-4 min-w-0 ${className}`.trim()}>
       
@@ -213,7 +273,7 @@ export default function MiddleDiscoverySection({
       </div>
 
       {/* 3. DISCOVERY MAP */}
-      <DiscoveryMap startLocation={startCity} destinations={destinations} />
+      <DiscoveryMap startLocation={startCity} destinations={destinations} onSelect={onDestinationSelect} />
 
       {/* 4. SUGGESTED DESTINATIONS */}
       <div className="space-y-roamio-3 text-left pt-roamio-1">
@@ -224,18 +284,12 @@ export default function MiddleDiscoverySection({
             Suggested Destinations
           </h3>
           <span className="roamio-body-xs text-roamio-text-tertiary font-medium">
-            {isLoading ? 'Searching...' : `${destinations.length} items found`}
+            {`${destinations.length} items found`}
           </span>
         </div>
 
-        {/* 3-Column Cards Grid on Desktop with Loading and Empty States */}
-        {isLoading ? (
-          <div className="py-12 px-4 flex flex-col items-center justify-center text-center bg-white border border-roamio-border-light rounded-roamio-2 shadow-2xs">
-            <div className="w-8 h-8 border-3 border-roamio-primary-accent border-t-transparent rounded-full animate-spin mb-3"></div>
-            <p className="roamio-body-sm font-semibold text-roamio-text-primary">Discovering destinations...</p>
-            <p className="roamio-body-xs text-roamio-text-secondary mt-0.5">Fetching location-aware recommendations</p>
-          </div>
-        ) : destinations.length > 0 ? (
+        {/* 3-Column Cards Grid on Desktop */}
+        {destinations.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-roamio-2">
             {destinations.map((dest) => (
               <DestinationCard
@@ -255,12 +309,12 @@ export default function MiddleDiscoverySection({
         )}
 
         {/* View All Link */}
-        {destinations.length > 0 && !isLoading && (
+        {destinations.length > 0 && (
           <div className="pt-roamio-1">
             <button
               type="button"
               onClick={onViewAll}
-              className="roamio-body-xs font-bold text-roamio-primary-accent hover:underline transition cursor-pointer select-none"
+              className="roamio-body-md-medium text-roamio-primary-accent hover:underline transition cursor-pointer select-none"
             >
               View All
             </button>

@@ -351,12 +351,12 @@ export default function DeveloperTestPage({ onBack }) {
             <div className="p-3 rounded-roamio-2 border border-roamio-border-light bg-white shadow-roamio-sm">
               <div className="h-8 rounded-roamio-1 bg-roamio-primary-accent mb-2"></div>
               <div className="font-semibold text-roamio-text-primary">Primary Accent</div>
-              <div className="text-2xs text-roamio-text-tertiary">#164A3A</div>
+              <div className="text-2xs text-roamio-text-tertiary">#176B53</div>
             </div>
             <div className="p-3 rounded-roamio-2 border border-roamio-border-light bg-white shadow-roamio-sm">
               <div className="h-8 rounded-roamio-1 bg-roamio-primary-hover mb-2"></div>
               <div className="font-semibold text-roamio-text-primary">Primary Hover</div>
-              <div className="text-2xs text-roamio-text-tertiary">#0E3227</div>
+              <div className="text-2xs text-roamio-text-tertiary">#00513D</div>
             </div>
             <div className="p-3 rounded-roamio-2 border border-roamio-border-light bg-white shadow-roamio-sm">
               <div className="h-8 rounded-roamio-1 bg-roamio-accent-secondary mb-2"></div>

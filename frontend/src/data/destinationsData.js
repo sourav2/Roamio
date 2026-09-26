@@ -1168,7 +1168,7 @@ export function calculateDynamicBudgetCategories(destinationsByDay, travellerCou
       totalFormatted: '₹0',
       activeDaysCount: 0,
       categories: [
-        { name: 'Transport', amount: 0, percentage: 0, color: '#164A3A' },
+        { name: 'Transport', amount: 0, percentage: 0, color: '#176B53' },
         { name: 'Stay', amount: 0, percentage: 0, color: '#46B392' },
         { name: 'Food', amount: 0, percentage: 0, color: '#EBBA58' },
         { name: 'Activities', amount: 0, percentage: 0, color: '#949494' },
@@ -1206,7 +1206,7 @@ export function calculateDynamicBudgetCategories(destinationsByDay, travellerCou
     totalFormatted: `₹ ${totalAmount.toLocaleString('en-IN')}`,
     activeDaysCount,
     categories: [
-      { name: 'Transport', amount: transportAmount, percentage: pTransport, color: '#164A3A' },
+      { name: 'Transport', amount: transportAmount, percentage: pTransport, color: '#176B53' },
       { name: 'Stay', amount: stayAmount, percentage: pStay, color: '#46B392' },
       { name: 'Food', amount: foodAmount, percentage: pFood, color: '#EBBA58' },
       { name: 'Activities', amount: activityAmount, percentage: pActivities, color: '#949494' },

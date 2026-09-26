@@ -66,7 +66,7 @@ export default function Sidebar({
                 }}
                 className={`flex items-center gap-3 rounded-xl px-4 py-2 text-xs font-bold transition cursor-pointer ${
                   isActive
-                    ? 'bg-travel-accent-green/50 text-[#16A34A] border border-travel-accent-green'
+                    ? 'bg-roamio-primary-accent/10 text-roamio-primary-accent border border-roamio-primary-accent/30'
                     : 'text-travel-text-muted hover:bg-travel-bg-soft hover:text-travel-text-primary'
                 }`}
               >
@@ -90,7 +90,7 @@ export default function Sidebar({
                 setCurrentPage('planner');
                 onClose();
               }}
-              className="text-[#16A34A] hover:text-[#15803D]"
+              className="text-roamio-primary-accent hover:text-roamio-primary-hover"
               title="Plan new trip"
             >
               <PlusCircle className="h-4.5 w-4.5" />
@@ -107,7 +107,7 @@ export default function Sidebar({
               savedTrips.map((trip) => (
                 <div
                   key={trip.id || trip.destination + trip.budget}
-                  className="group relative flex items-center justify-between rounded-xl border border-travel-accent-gray hover:border-[#16A34A] bg-travel-bg-gray p-3 transition-all duration-200 hover:shadow-xs"
+                  className="group relative flex items-center justify-between rounded-xl border border-travel-accent-gray hover:border-roamio-primary-accent bg-travel-bg-gray p-3 transition-all duration-200 hover:shadow-xs"
                 >
                   <button
                     onClick={() => {

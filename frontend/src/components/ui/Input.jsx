@@ -5,7 +5,7 @@ import React, { forwardRef } from 'react';
  * 
  * Strict Roamio Design System implementation:
  * - Typography: Body sm (14px/20px) / Body md (16px/22px)
- * - Borders: Border Light (#DEDEDE), Focus: Primary Accent (#164A3A), Error: Danger (#DC2626)
+ * - Borders: Border Light (#DEDEDE), Focus: Primary Accent (#176B53), Error: Danger (#DC2626)
  * - Radius: 8px (Radius 2)
  * - Background: App Background (#FFFFFF)
  */

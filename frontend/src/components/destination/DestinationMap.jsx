@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Compass } from 'lucide-react';
+import { MapChipController } from '../../services/maps/mapChipCollision';
 
 const CATEGORY_LEGEND = [
   { name: 'Viewpoints', color: '#2F9E6F' },
@@ -16,8 +17,8 @@ const CATEGORY_LEGEND = [
  * 
  * High-fidelity destination-focused topographic Leaflet map matching Figma reference:
  * - Esri World Topo Map cartographic tiles
- * - Destination town center pin + dashed route connectors
- * - Place pill markers with category color dots & distance
+ * - Collision-aware town center pin & place markers with radial offset placement
+ * - Dashed route connectors to nearby attractions
  * - Top-left category legend overlay
  * - Top-right compass rose
  * - Bottom-left West Bengal inset locator
@@ -26,9 +27,13 @@ const CATEGORY_LEGEND = [
 export default function DestinationMap({
   destination,
   className = '',
+  onSelect = null,
+  onHover = null,
 }) {
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
+  const chipControllerRef = useRef(null);
+  const routeLayerGroupRef = useRef(null);
 
   useEffect(() => {
     if (!mapContainerRef.current || !destination) return;
@@ -49,7 +54,20 @@ export default function DestinationMap({
 
       L.control.zoom({ position: 'bottomright' }).addTo(map);
 
+      routeLayerGroupRef.current = L.layerGroup().addTo(map);
+      chipControllerRef.current = new MapChipController(map, {
+        onPreviewClick: onSelect,
+        onSelect,
+        onHover,
+      });
+
       mapInstanceRef.current = map;
+    }
+
+    if (chipControllerRef.current) {
+      chipControllerRef.current.onPreviewClick = onSelect;
+      chipControllerRef.current.onSelect = onSelect;
+      chipControllerRef.current.onHover = onHover;
     }
 
     const map = mapInstanceRef.current;
@@ -60,66 +78,67 @@ export default function DestinationMap({
       map.invalidateSize();
     }, 100);
 
-    // Clear existing vector layers
-    map.eachLayer((layer) => {
-      if (layer instanceof L.Marker || layer instanceof L.Polyline || layer instanceof L.CircleMarker) {
-        map.removeLayer(layer);
-      }
-    });
+    const routeLayer = routeLayerGroupRef.current;
+    if (routeLayer) {
+      routeLayer.clearLayers();
+    }
 
     const centerCoords = destination.coordinates;
+    const places = Array.isArray(destination.nearbyPlaces) ? destination.nearbyPlaces : [];
 
     // 1. Draw dashed connecting route lines from center to places
-    destination.nearbyPlaces.forEach((place) => {
-      if (!place.coords) return;
-      const midLat = (centerCoords[0] + place.coords[0]) / 2 + (Math.random() - 0.5) * 0.008;
-      const midLon = (centerCoords[1] + place.coords[1]) / 2 + (Math.random() - 0.5) * 0.008;
+    if (routeLayer && centerCoords) {
+      places.forEach((place) => {
+        if (!place.coords) return;
+        const midLat = (centerCoords[0] + place.coords[0]) / 2 + (Math.random() - 0.5) * 0.008;
+        const midLon = (centerCoords[1] + place.coords[1]) / 2 + (Math.random() - 0.5) * 0.008;
 
-      L.polyline([centerCoords, [midLat, midLon], place.coords], {
-        color: '#46B392',
-        weight: 2,
-        opacity: 0.75,
-        dashArray: '4, 6',
-        lineCap: 'round',
-      }).addTo(map);
-    });
-
-    // 2. Add Center Marker for the destination town
-    const centerIconHtml = `
-      <div style="display:inline-flex; align-items:center; gap:5px; background:var(--roamio-primary-accent, #164A3A); color:#FFFFFF; padding:4px 10px; border-radius:var(--roamio-radius-1, 4px); border:1px solid rgba(255,255,255,0.2); box-shadow:0 3px 8px rgba(0,0,0,0.3); width:max-content; max-width:200px; cursor:pointer; font-family:'Inter', sans-serif;">
-        <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#46B392; flex-shrink:0;"></span>
-        <span style="font-size:12px; font-weight:700; color:#FFFFFF; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; line-height:16px;">${destination.name}</span>
-      </div>
-    `;
-
-    const centerIcon = L.divIcon({
-      html: centerIconHtml,
-      className: 'destination-map-center-marker',
-      iconSize: null,
-    });
-
-    L.marker(centerCoords, { icon: centerIcon }).addTo(map);
-
-    // 3. Add Place markers
-    destination.nearbyPlaces.forEach((place) => {
-      if (!place.coords) return;
-
-      const placeIconHtml = `
-        <div style="display:inline-flex; align-items:center; gap:4px; background:var(--roamio-primary-accent, #164A3A); color:#FFFFFF; padding:3px 8px 3px 6px; border-radius:var(--roamio-radius-1, 4px); border:1px solid rgba(255,255,255,0.18); box-shadow:0 2px 5px rgba(0,0,0,0.2); width:max-content; max-width:180px; cursor:pointer; font-family:'Inter', sans-serif;">
-          <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:${place.categoryColor || '#10B981'}; flex-shrink:0;"></span>
-          <span style="font-size:10.5px; font-weight:600; color:#FFFFFF; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; line-height:14px;">${place.name}</span>
-          ${place.distance ? `<span style="font-size:9px; color:rgba(255,255,255,0.75); white-space:nowrap; margin-left:2px; flex-shrink:0;">${place.distance}</span>` : ''}
-        </div>
-      `;
-
-      const placeIcon = L.divIcon({
-        html: placeIconHtml,
-        className: 'destination-map-place-marker',
-        iconSize: null,
+        L.polyline([centerCoords, [midLat, midLon], place.coords], {
+          color: '#46B392',
+          weight: 2,
+          opacity: 0.75,
+          dashArray: '4, 6',
+          lineCap: 'round',
+        }).addTo(routeLayer);
       });
+    }
 
-      L.marker(place.coords, { icon: placeIcon }).addTo(map);
+    // 2. Prepare items for collision-aware chip controller
+    const chipItems = [];
+    if (centerCoords) {
+      chipItems.push({
+        id: destination.id ? `dest_center_${destination.id}` : 'destination_center',
+        name: destination.name,
+        coords: centerCoords,
+        isCenter: true,
+        priority: 100,
+        color: '#46B392',
+        region: destination.region,
+        weather: destination.weather,
+        budget: destination.budget,
+      });
+    }
+
+    places.forEach((place, idx) => {
+      if (!place.coords) return;
+      chipItems.push({
+        id: place.id || `place_${idx}`,
+        name: place.name,
+        coords: place.coords,
+        categoryColor: place.categoryColor || '#10B981',
+        distance: place.distance,
+        description: place.description || place.intro,
+        category: place.category,
+        timeAndCost: place.timeAndCost || place.estimatedCost,
+        image: place.image,
+        priority: 60 + (places.length - idx),
+        ...place,
+      });
     });
+
+    if (chipControllerRef.current) {
+      chipControllerRef.current.setItems(chipItems);
+    }
 
     // ResizeObserver to ensure Leaflet recalculates dimensions when container stretches
     let resizeObserver = null;
@@ -127,6 +146,9 @@ export default function DestinationMap({
       resizeObserver = new ResizeObserver(() => {
         if (mapInstanceRef.current) {
           mapInstanceRef.current.invalidateSize();
+          if (chipControllerRef.current) {
+            chipControllerRef.current.handleMapMove();
+          }
         }
       });
       resizeObserver.observe(mapContainerRef.current);
@@ -139,7 +161,7 @@ export default function DestinationMap({
       }
     };
 
-  }, [destination]);
+  }, [destination, onSelect, onHover]);
 
   return (
     <div className={`relative w-full h-full min-h-[380px] overflow-hidden bg-[#EDF3EF] ${className}`.trim()}>

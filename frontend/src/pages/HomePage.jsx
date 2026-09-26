@@ -15,7 +15,7 @@ import ManualPreferencesDrawer from '../components/ManualPreferencesDrawer';
  *   - H1: "Find your next escape.\nWe'll help you plan the rest." (Fraunces Display)
  *   - Subtitle: "Tell Roamio what you're looking for, and we'll find destinations that fit your time, budget, and travel style."
  *   - Search Field: Pill shape, natural language placeholder, microphone icon
- *   - Explore Button: Primary Accent #164A3A, Inter Medium 16px/22px
+ *   - Explore Button: Primary Accent #176B53, Inter Medium 16px/22px
  * - Right Slide-Over: ManualPreferencesDrawer integration
  */
 export default function HomePage({ setCurrentPage, onSearchQuery, filterState, onFilterChange }) {

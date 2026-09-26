@@ -6,7 +6,7 @@ import { X } from 'lucide-react';
  * 
  * Strict Roamio Design System implementation:
  * - Radius: Radius Full = 9999px (Pill treatment)
- * - Selected State: Primary Accent background (#164A3A), Text Inverse (#F8F6F0 / #FFFFFF)
+ * - Selected State: Primary Accent background (#176B53), Text Inverse (#F8F6F0 / #FFFFFF)
  * - Unselected State: Secondary Background (#F8F6F0), Border Light (#DEDEDE), Text Primary (#1C2420)
  * - Hover State: Border Default (#C0C0C0), Background Card (#FFFFFF)
  * - Spacing: Spacing 1 (4px) vertically, Spacing 3 (12px) / 4 (16px) horizontally

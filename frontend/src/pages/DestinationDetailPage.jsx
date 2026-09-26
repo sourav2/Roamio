@@ -10,6 +10,12 @@ import { getDestinationById } from '../data/destinationsData';
 import { forceUnlockScroll } from '../components/ui/Modal';
 import { travelApi } from '../services/api';
 import { geocodingService } from '../services/maps/geocodingService';
+import {
+  TimeoutWarningBanner,
+  DestinationOverviewSkeleton,
+  ExperienceCardsSkeleton,
+  DestinationPageSkeleton,
+} from '../components/skeleton/DashboardSkeleton';
 
 /**
  * Format a destination object into standard structure required by DestinationDetailPage
@@ -396,6 +402,24 @@ export default function DestinationDetailPage({
     }));
   };
 
+  const [showTimeoutWarning, setShowTimeoutWarning] = useState(false);
+
+  // Monitor loading duration to trigger TimeoutWarningBanner after 4.5s
+  useEffect(() => {
+    let timer = null;
+    if (isLoadingPlaces) {
+      setShowTimeoutWarning(false);
+      timer = setTimeout(() => {
+        setShowTimeoutWarning(true);
+      }, 4500);
+    } else {
+      setShowTimeoutWarning(false);
+    }
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [isLoadingPlaces]);
+
   // Clean empty state if no destination was supplied or resolved
   if (!destData) {
     return (
@@ -405,20 +429,8 @@ export default function DestinationDetailPage({
           onSearch={onSearch}
           onNavigateSaved={onNavigateSaved}
         />
-        <main className="flex-1 flex flex-col items-center justify-center p-6 text-center">
-          <div className="bg-white border border-roamio-border-light rounded-roamio-3 p-8 max-w-md shadow-2xs">
-            <h2 className="text-xl font-bold text-roamio-text-primary mb-2">Destination Not Found</h2>
-            <p className="roamio-body-xs text-roamio-text-secondary mb-6">
-              The requested destination could not be loaded or has not been selected yet. Try exploring destinations from the search dashboard.
-            </p>
-            <button
-              type="button"
-              onClick={onNavigateHome}
-              className="px-5 py-2.5 bg-roamio-btn-primary text-white rounded-roamio-1 text-sm font-semibold hover:bg-roamio-btn-primary-hover transition cursor-pointer"
-            >
-              Return Home
-            </button>
-          </div>
+        <main className="flex-1 w-full max-w-[1720px] mx-auto px-roamio-4 sm:px-roamio-6 py-roamio-5">
+          <DestinationPageSkeleton onCancel={onNavigateHome} />
         </main>
       </div>
     );
@@ -439,6 +451,13 @@ export default function DestinationDetailPage({
 
       {/* 2. MAIN CONTENT & RIGHT PANEL (12-Column Desktop Grid with Roamio 16px Gutter) */}
       <main className="flex-1 w-full max-w-[1720px] mx-auto px-roamio-4 sm:px-roamio-6 py-roamio-5">
+        {/* Optional Timeout Warning Alert matching Figma */}
+        {showTimeoutWarning && (
+          <div className="mb-roamio-4">
+            <TimeoutWarningBanner onCancel={onNavigateHome} />
+          </div>
+        )}
+
         <div className="flex flex-col xl:flex-row gap-roamio-4 items-start w-full">
           
           {/* MAIN DESTINATION SECTION */}
@@ -454,68 +473,74 @@ export default function DestinationDetailPage({
               </p>
             </div>
 
-            {/* MAIN DESTINATION OVERVIEW (Map + 5 Compact Info Sections) */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-roamio-4 items-stretch">
-              {/* Destination Map */}
-              <div className="lg:col-span-8 xl:col-span-8 w-full min-w-0 flex flex-col h-full">
-                <DestinationMap destination={mapDest} className="w-full h-full" />
-              </div>
+            {/* MAIN DESTINATION OVERVIEW (Map + Compact Info Sections / Skeleton State) */}
+            {isLoadingPlaces ? (
+              <DestinationOverviewSkeleton />
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-roamio-4 items-stretch">
+                {/* Destination Map */}
+                <div className="lg:col-span-8 xl:col-span-8 w-full min-w-0 flex flex-col h-full">
+                  <DestinationMap
+                    destination={mapDest}
+                    className="w-full h-full"
+                    onSelect={(item) => setSelectedExperience && setSelectedExperience(item)}
+                  />
+                </div>
 
-              {/* Destination Information Column Beside Map */}
-              <div className="lg:col-span-4 xl:col-span-4 w-full min-w-0 flex flex-col justify-between h-full">
-                <DestinationInfoCards destination={destData} className="h-full" />
+                {/* Destination Information Column Beside Map */}
+                <div className="lg:col-span-4 xl:col-span-4 w-full min-w-0 flex flex-col justify-between h-full">
+                  <DestinationInfoCards destination={destData} className="h-full" />
+                </div>
               </div>
-            </div>
+            )}
 
             {/* SUGGESTED DESTINATIONS / EXPERIENCES SECTION */}
-            <section className="space-y-roamio-3 text-left pt-2">
-              <div className="flex items-center justify-between">
-                <h3 className="roamio-h5 font-bold text-roamio-text-primary">
-                  Suggested Destinations
-                </h3>
-                <button
-                  type="button"
-                  onClick={onViewAll}
-                  className="roamio-body-xs font-bold text-roamio-primary-accent hover:underline cursor-pointer transition select-none"
-                >
-                  View All
-                </button>
-              </div>
+            {isLoadingPlaces ? (
+              <ExperienceCardsSkeleton />
+            ) : (
+              <section className="space-y-roamio-3 text-left pt-2">
+                <div className="flex items-center justify-between">
+                  <h3 className="roamio-h5 font-bold text-roamio-text-primary">
+                    Suggested Destinations
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={onViewAll}
+                    className="roamio-body-xs font-bold text-roamio-primary-accent hover:underline cursor-pointer transition select-none"
+                  >
+                    View All
+                  </button>
+                </div>
 
-              {/* 4-Column × 2-Row Experience Cards Grid */}
-              {isLoadingPlaces ? (
-                <div className="py-12 flex flex-col items-center justify-center text-center bg-white border border-roamio-border-light rounded-roamio-2 shadow-2xs">
-                  <div className="w-8 h-8 border-3 border-roamio-primary-accent border-t-transparent rounded-full animate-spin mb-3"></div>
-                  <p className="roamio-body-sm font-semibold text-roamio-text-primary">Discovering experiences...</p>
-                  <p className="roamio-body-xs text-roamio-text-secondary mt-0.5">Fetching local attractions for {destData.name}</p>
-                </div>
-              ) : nearbyPlaces.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-roamio-3">
-                  {nearbyPlaces.map((place) => {
-                    const isAdded = Object.values(destinationsByDay).some((dayList) =>
-                      (dayList || []).some((item) => item.id === place.id)
-                    );
-                    return (
-                      <ExperienceCard
-                        key={place.id}
-                        place={place}
-                        isAdded={isAdded}
-                        onAddToTrip={() => handleOpenDaySelection(place)}
-                        onCardClick={() => {
-                          setSelectedExperience(place);
-                          setIsModalOpen(true);
-                        }}
-                      />
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="py-10 px-4 flex flex-col items-center justify-center text-center bg-white border border-roamio-border-light rounded-roamio-2 shadow-2xs">
-                  <p className="roamio-body-sm font-bold text-roamio-text-primary">No nearby experiences discovered yet for {destData.name}.</p>
-                  <p className="roamio-body-xs text-roamio-text-secondary mt-1">Try another destination or explore more regional attractions.</p>
-                </div>
-              )}
-            </section>
+                {/* 4-Column × 2-Row Experience Cards Grid */}
+                {nearbyPlaces.length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-roamio-3">
+                    {nearbyPlaces.map((place) => {
+                      const isAdded = Object.values(destinationsByDay).some((dayList) =>
+                        (dayList || []).some((item) => item.id === place.id)
+                      );
+                      return (
+                        <ExperienceCard
+                          key={place.id}
+                          place={place}
+                          isAdded={isAdded}
+                          onAddToTrip={() => handleOpenDaySelection(place)}
+                          onCardClick={() => {
+                            setSelectedExperience(place);
+                            setIsModalOpen(true);
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="py-10 px-4 flex flex-col items-center justify-center text-center bg-white border border-roamio-border-light rounded-roamio-2 shadow-2xs">
+                    <p className="roamio-body-sm font-bold text-roamio-text-primary">No nearby experiences discovered yet for {destData.name}.</p>
+                    <p className="roamio-body-xs text-roamio-text-secondary mt-1">Try another destination or explore more regional attractions.</p>
+                  </div>
+                )}
+              </section>
+            )}
 
           </div>
 
@@ -524,6 +549,7 @@ export default function DestinationDetailPage({
             tripDuration={tripDuration}
             travellerCount={travellerCount}
             className="w-full xl:w-[360px] 2xl:w-[380px] shrink-0"
+            isLoading={isLoadingPlaces}
             selectedDay={selectedDay}
             onSelectDay={handleSelectDay}
             destinationsByDay={destinationsByDay}

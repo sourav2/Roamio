@@ -227,7 +227,7 @@ export default function PlaceDetailsPage({
             <div className="rounded-2xl border border-travel-borders bg-white p-5 shadow-xs flex flex-col justify-between">
               <div>
                 <h3 className="text-card-heading text-travel-text-primary mb-3 flex items-center gap-1">
-                  <Calendar className="h-4 w-4 text-[#16A34A]" /> Best Time to Visit
+                  <Calendar className="h-4 w-4 text-roamio-primary-accent" /> Best Time to Visit
                 </h3>
                 <p className="text-body-custom text-travel-text-secondary leading-relaxed">
                   {details.best_time}
@@ -241,7 +241,7 @@ export default function PlaceDetailsPage({
               <ul className="space-y-2">
                 {(details.tips || []).map((tip, idx) => (
                   <li key={idx} className="flex gap-2 items-start text-body-custom text-travel-text-secondary">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#16A34A] mt-1.5 shrink-0" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-roamio-primary-accent mt-1.5 shrink-0" />
                     <span>{tip}</span>
                   </li>
                 ))}
@@ -305,7 +305,7 @@ export default function PlaceDetailsPage({
                   onClick={() => setActiveImageIdx(idx)}
                   className={`aspect-square rounded-xl overflow-hidden border cursor-pointer transition ${
                     activeImageIdx === idx
-                      ? 'border-[#16A34A] ring-2 ring-emerald-500/20'
+                      ? 'border-roamio-primary-accent ring-2 ring-roamio-primary-accent/20'
                       : 'border-travel-borders hover:border-black'
                   }`}
                 >
@@ -332,7 +332,7 @@ export default function PlaceDetailsPage({
             
             <div>
               <h4 className="text-card-heading text-travel-text-primary mb-2.5 flex items-center gap-1">
-                <Sparkles className="h-3.5 w-3.5 text-[#16A34A]" /> Top Activities
+                <Sparkles className="h-3.5 w-3.5 text-roamio-primary-accent" /> Top Activities
               </h4>
               <ul className="space-y-2">
                 {(details.activities || []).map((act, idx) => (

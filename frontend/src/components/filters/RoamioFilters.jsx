@@ -27,7 +27,7 @@ const RoamioFilters = forwardRef(function RoamioFilters({
   title = 'Filters',
   showHeader = true,
   showSubmit = true,
-  submitLabel = 'Submit',
+  submitLabel = 'Find Destination',
   initialValues,
   onChange,
   onSubmit,
@@ -346,7 +346,29 @@ const RoamioFilters = forwardRef(function RoamioFilters({
     setSelectedTripTypes(DEFAULT_FILTER_STATE.selectedTripTypes);
     setAccommodationType(DEFAULT_FILTER_STATE.accommodationType);
     setCrowdLevel(DEFAULT_FILTER_STATE.crowdLevel);
-    if (onReset) onReset();
+
+    const resetValues = {
+      location: DEFAULT_FILTER_STATE.location,
+      selectedLocation: DEFAULT_FILTER_STATE.selectedLocation,
+      locationTyped: DEFAULT_FILTER_STATE.location,
+      destination: DEFAULT_FILTER_STATE.destination || '',
+      selectedDestination: DEFAULT_FILTER_STATE.selectedDestination || null,
+      destinationTyped: '',
+      travellers: DEFAULT_FILTER_STATE.travellers,
+      travellerCount: DEFAULT_FILTER_STATE.travellerCount,
+      duration: DEFAULT_FILTER_STATE.duration,
+      budget: DEFAULT_FILTER_STATE.budget,
+      maxTravelTime: DEFAULT_FILTER_STATE.maxTravelTime,
+      travelMode: DEFAULT_FILTER_STATE.travelMode,
+      tripTypes: DEFAULT_FILTER_STATE.selectedTripTypes,
+      selectedTripTypes: DEFAULT_FILTER_STATE.selectedTripTypes,
+      accommodationType: DEFAULT_FILTER_STATE.accommodationType,
+      crowdLevel: DEFAULT_FILTER_STATE.crowdLevel,
+      isValid: true,
+    };
+
+    if (onChange) onChange(resetValues);
+    if (onReset) onReset(resetValues);
   };
 
   const getFilterValues = () => {
@@ -603,7 +625,7 @@ const RoamioFilters = forwardRef(function RoamioFilters({
       {/* 9. ACCOMMODATION TYPE */}
       <section className="space-y-roamio-1.5">
         <h4 className="roamio-h6 text-roamio-text-primary text-sm font-semibold mb-2">
-          Accomodation Type
+          Accommodation Type
         </h4>
         <div className="flex flex-wrap gap-roamio-2">
           {ACCOMMODATION_OPTIONS.map((acc) => (
@@ -644,18 +666,28 @@ const RoamioFilters = forwardRef(function RoamioFilters({
         </div>
       </section>
 
-      {/* Submit Button */}
+      {/* Action Buttons: Reset & Find Destination */}
       {showSubmit && (
         <div className="pt-roamio-2 space-y-1.5">
-          <Button
-            type="button"
-            variant="primary"
-            isFullWidth
-            disabled={!canSubmit}
-            onClick={handleFormSubmit}
-          >
-            {submitLabel}
-          </Button>
+          <div className="flex items-center gap-roamio-4 w-full">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleReset}
+              className="w-[42%] shrink-0 !px-2 whitespace-nowrap"
+            >
+              Reset
+            </Button>
+            <Button
+              type="button"
+              variant="primary"
+              disabled={!canSubmit}
+              onClick={handleFormSubmit}
+              className="flex-1 !px-2 whitespace-nowrap"
+            >
+              {submitLabel}
+            </Button>
+          </div>
           {!canSubmit && (
             <p className="text-xs text-roamio-semantic-warning text-center font-medium">
               Please select from the dropdown suggestions to search.

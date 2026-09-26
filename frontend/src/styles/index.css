@@ -11,7 +11,7 @@
 }
 
 :root {
-  --primary-green: #16A34A;
+  --primary-green: var(--roamio-primary-accent, #176B53);
   --dark: #111111;
   --text: #111827;
   --muted: #6B7280;
@@ -90,6 +90,52 @@
   background: linear-gradient(90deg, #eaeaea 25%, #dceaf7 37%, #eaeaea 63%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite linear;
+}
+
+/* Roamio Unified Dashboard Skeleton Shimmer System */
+@keyframes roamio-shimmer-left-to-right {
+  0% {
+    background-position: -250% 0;
+  }
+  100% {
+    background-position: 250% 0;
+  }
+}
+
+.roamio-shimmer {
+  background: linear-gradient(
+    90deg,
+    #E2E8E5 0%,
+    #E2E8E5 30%,
+    #F3F6F5 50%,
+    #E2E8E5 70%,
+    #E2E8E5 100%
+  );
+  background-size: 250% 100%;
+  animation: roamio-shimmer-left-to-right 1.8s infinite ease-in-out;
+}
+
+.roamio-map-shimmer {
+  background: linear-gradient(
+    90deg,
+    #DFE5E2 0%,
+    #DFE5E2 35%,
+    #EEF4F1 50%,
+    #DFE5E2 65%,
+    #DFE5E2 100%
+  );
+  background-size: 250% 100%;
+  animation: roamio-shimmer-left-to-right 1.8s infinite ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .roamio-shimmer,
+  .roamio-map-shimmer,
+  .shimmer,
+  .dark-shimmer {
+    animation: none !important;
+    background: #DFE5E2 !important;
+  }
 }
 
 /* Rotating Minimal Loader */
@@ -252,15 +298,15 @@
   cursor: not-allowed;
 }
 
-/* Roamio Primary Button (#164A3A / Hover #0E3227) */
+/* Roamio Primary Button (#176B53 / Hover #00513D) */
 .btn-premium-primary {
-  background-color: var(--roamio-primary-accent, #164A3A);
+  background-color: var(--roamio-primary-accent, #176B53);
   color: #FFFFFF;
   border-color: transparent;
   box-shadow: var(--roamio-shadow-small);
 }
 .btn-premium-primary:hover:not(:disabled) {
-  background-color: var(--roamio-primary-accent-hover, #0E3227);
+  background-color: var(--roamio-primary-accent-hover, #00513D);
 }
 
 /* Roamio Secondary Button */
@@ -277,8 +323,8 @@
 /* Roamio Outline Button */
 .btn-premium-outline {
   background-color: transparent;
-  border-color: var(--roamio-primary-accent, #164A3A);
-  color: var(--roamio-primary-accent, #164A3A);
+  border-color: var(--roamio-primary-accent, #176B53);
+  color: var(--roamio-primary-accent, #176B53);
 }
 .btn-premium-outline:hover:not(:disabled) {
   background-color: var(--roamio-bg-secondary, #F8F6F0);
@@ -291,8 +337,8 @@
   color: #FFFFFF;
 }
 .btn-premium-dark:hover:not(:disabled) {
-  background-color: var(--roamio-primary-accent-hover, #0E3227);
-  border-color: var(--roamio-primary-accent, #164A3A);
+  background-color: var(--roamio-primary-accent-hover, #00513D);
+  border-color: var(--roamio-primary-accent, #176B53);
 }
 
 /* Red Danger Button */

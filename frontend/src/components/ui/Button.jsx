@@ -5,7 +5,7 @@ import React from 'react';
  * 
  * Strict Roamio Design System implementation:
  * - Typography: Label / Button (Inter Medium, 16px / 22px)
- * - Primary: #164A3A, Primary Hover: #0E3227
+ * - Primary: #176B53, Primary Hover: #00513D
  * - Stroke: 1px default
  * - Radius: 8px default (Radius 2) or 9999px (Radius Full)
  */

@@ -522,7 +522,7 @@ export default function PlannerPage({
           <rect width="180" height="72" fill="#FAF5E6" stroke={accentColor} strokeWidth="1.5" rx="6" />
           <text x="15" y="18" fontWeight="black" fontSize="10" fill={primaryColor} letterSpacing="0.5">MAP LEGEND</text>
 
-          <polygon points="17,33 25,33 21,25" fill="#15803D" stroke="#fff" strokeWidth="1" />
+          <polygon points="17,33 25,33 21,25" fill="#176B53" stroke="#fff" strokeWidth="1" />
           <text x="35" y="34" fontSize="9.5" fontWeight="bold" fill={primaryColor}>Base Hub City</text>
 
           <circle cx="21" cy="50" r="6" fill={secondaryColor} stroke="#fff" strokeWidth="1" />
@@ -540,7 +540,7 @@ export default function PlannerPage({
                 <g transform={`translate(${node.x}, ${node.y})`}>
                   <polygon
                     points="0,-13 13,9 -13,9"
-                    fill="#15803D"
+                    fill="#176B53"
                     stroke="#FFF"
                     strokeWidth="2.5"
                     className="cursor-pointer filter drop-shadow-md"
@@ -652,14 +652,14 @@ export default function PlannerPage({
         <svg viewBox={`0 0 ${Math.max(800, cleanStops.length * 150)} 120`} className="h-28 mx-auto" style={{ minWidth: `${Math.max(600, cleanStops.length * 120)}px` }}>
           <defs>
             <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 2 L 8 5 L 0 8 z" fill="#16A34A" />
+              <path d="M 0 2 L 8 5 L 0 8 z" fill="#176B53" />
             </marker>
           </defs>
 
           <path
             d={`M 50 60 H ${cleanStops.length * 150 - 100}`}
             fill="none"
-            stroke="#10B981"
+            stroke="#176B53"
             strokeWidth="3"
             strokeDasharray="6 4"
           />
@@ -672,7 +672,7 @@ export default function PlannerPage({
                   <path
                     d={`M ${x + 20} 60 H ${x + 130}`}
                     fill="none"
-                    stroke="#16A34A"
+                    stroke="#176B53"
                     strokeWidth="2"
                     markerEnd="url(#arrow)"
                   />
@@ -683,7 +683,7 @@ export default function PlannerPage({
                   cy="60"
                   r="16"
                   fill="#ffffff"
-                  stroke="#16A34A"
+                  stroke="#176B53"
                   strokeWidth="3.5"
                 />
 
@@ -691,7 +691,7 @@ export default function PlannerPage({
                   x={x}
                   y="64"
                   textAnchor="middle"
-                  fill="#15803D"
+                  fill="#176B53"
                   fontSize="11"
                   fontWeight="bold"
                 >
@@ -1012,10 +1012,10 @@ export default function PlannerPage({
           <svg viewBox="0 0 42 42" className="h-full w-full transform -rotate-90">
             <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#F1F5F9" strokeWidth="5" />
             {/* Transport (Green) */}
-            <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#16A34A" strokeWidth="5"
+            <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#176B53" strokeWidth="5"
               strokeDasharray={`${pTransport} ${100 - pTransport}`} strokeDashoffset={o1} />
             {/* Stay (Dark Green) */}
-            <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#15803D" strokeWidth="5"
+            <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#00513D" strokeWidth="5"
               strokeDasharray={`${pStay} ${100 - pStay}`} strokeDashoffset={o2} />
             {/* Food (Orange) */}
             <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#F59E0B" strokeWidth="5"
@@ -1036,14 +1036,14 @@ export default function PlannerPage({
         <div className="flex-1 space-y-2 text-xs sm:text-sm font-semibold text-travel-text-secondary w-full min-w-0">
           <div className="flex items-center justify-between gap-2 whitespace-nowrap">
             <div className="flex items-center gap-1.5 min-w-0">
-              <span className="h-2.5 w-2.5 rounded-full bg-[#16A34A] shrink-0" />
+              <span className="h-2.5 w-2.5 rounded-full bg-[#176B53] shrink-0" />
               <span className="truncate text-xs sm:text-sm">Transport</span>
             </div>
             <span className="shrink-0 pl-2 text-xs sm:text-sm">₹{transport.toLocaleString()} <span className="text-[11px] sm:text-[13px] font-medium text-gray-500">({pTransport}%)</span></span>
           </div>
           <div className="flex items-center justify-between gap-2 whitespace-nowrap">
             <div className="flex items-center gap-1.5 min-w-0">
-              <span className="h-2.5 w-2.5 rounded-full bg-[#15803D] shrink-0" />
+              <span className="h-2.5 w-2.5 rounded-full bg-[#00513D] shrink-0" />
               <span className="truncate text-xs sm:text-sm">Stay</span>
             </div>
             <span className="shrink-0 pl-2 text-xs sm:text-sm">₹{stay.toLocaleString()} <span className="text-[11px] sm:text-[13px] font-medium text-gray-500">({pStay}%)</span></span>
@@ -1199,7 +1199,7 @@ export default function PlannerPage({
         <div className="lg:col-span-3 xl:col-span-3 bg-white border border-travel-borders p-5 rounded-2xl shadow-premium text-left space-y-5">
           <div className="flex items-center justify-between pb-3 border-b border-travel-borders">
             <span className="font-display font-semibold text-travel-dark text-[16px] uppercase tracking-wider flex items-center gap-1.5">
-              <Sparkles className="h-4.5 w-4.5 text-[#16A34A]" />
+              <Sparkles className="h-4.5 w-4.5 text-roamio-primary-accent" />
               Trip Preferences
             </span>
           </div>
@@ -1559,7 +1559,7 @@ export default function PlannerPage({
             >
               {/* Onboarding Welcome Card */}
               <div className="rounded-2xl border border-travel-borders bg-white p-6 text-center shadow-premium space-y-4">
-                <span className="inline-flex items-center gap-1 bg-travel-accent-green/50 text-[#16A34A] px-3.5 py-1 rounded-full text-[12px] font-semibold uppercase tracking-wider">
+                <span className="inline-flex items-center gap-1 bg-roamio-primary-accent/10 text-roamio-primary-accent px-3.5 py-1 rounded-full text-[12px] font-semibold uppercase tracking-wider">
                   <Sparkles className="h-3.5 w-3.5" />
                   Travel Operating System Workspace
                 </span>
@@ -1577,11 +1577,11 @@ export default function PlannerPage({
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
                   <div
                     onClick={() => loadQuickTemplate('Meghalaya')}
-                    className="bg-white border border-travel-borders hover:border-[#16A34A] p-5 rounded-2xl cursor-pointer hover:shadow-xs transition flex flex-col justify-between group"
+                    className="bg-white border border-travel-borders hover:border-roamio-primary-accent p-5 rounded-2xl cursor-pointer hover:shadow-xs transition flex flex-col justify-between group"
                   >
                     <div>
-                      <span className="text-[12px] uppercase font-medium text-[#16A34A]">Adventure • Nature</span>
-                      <h4 className="text-card-heading text-travel-dark mt-1 group-hover:text-[#16A34A] transition-colors">Meghalaya Hills</h4>
+                      <span className="text-[12px] uppercase font-medium text-roamio-primary-accent">Adventure • Nature</span>
+                      <h4 className="text-card-heading text-travel-dark mt-1 group-hover:text-roamio-primary-accent transition-colors">Meghalaya Hills</h4>
                       <p className="text-small-custom text-[#6B7280] leading-relaxed mt-1">Living root bridges of Cherrapunji & Umngot waters.</p>
                     </div>
                     <div className="flex items-center justify-between pt-3 text-small-custom font-semibold text-[#6B7280] border-t border-travel-borders/60 mt-3">
@@ -1592,11 +1592,11 @@ export default function PlannerPage({
 
                   <div
                     onClick={() => loadQuickTemplate('Kerala')}
-                    className="bg-white border border-travel-borders hover:border-[#16A34A] p-5 rounded-2xl cursor-pointer hover:shadow-xs transition flex flex-col justify-between group"
+                    className="bg-white border border-travel-borders hover:border-roamio-primary-accent p-5 rounded-2xl cursor-pointer hover:shadow-xs transition flex flex-col justify-between group"
                   >
                     <div>
-                      <span className="text-[12px] uppercase font-medium text-[#16A34A]">Relaxed • Lakes</span>
-                      <h4 className="text-card-heading text-travel-dark mt-1 group-hover:text-[#16A34A] transition-colors">Kerala Backwaters</h4>
+                      <span className="text-[12px] uppercase font-medium text-roamio-primary-accent">Relaxed • Lakes</span>
+                      <h4 className="text-card-heading text-travel-dark mt-1 group-hover:text-roamio-primary-accent transition-colors">Kerala Backwaters</h4>
                       <p className="text-small-custom text-[#6B7280] leading-relaxed mt-1">Cruising houseboats, tea gardens, and coco groves.</p>
                     </div>
                     <div className="flex items-center justify-between pt-3 text-small-custom font-semibold text-[#6B7280] border-t border-travel-borders/60 mt-3">
@@ -1607,11 +1607,11 @@ export default function PlannerPage({
 
                   <div
                     onClick={() => loadQuickTemplate('Rajasthan')}
-                    className="bg-white border border-travel-borders hover:border-[#16A34A] p-5 rounded-2xl cursor-pointer hover:shadow-xs transition flex flex-col justify-between group"
+                    className="bg-white border border-travel-borders hover:border-roamio-primary-accent p-5 rounded-2xl cursor-pointer hover:shadow-xs transition flex flex-col justify-between group"
                   >
                     <div>
-                      <span className="text-[12px] uppercase font-medium text-[#16A34A]">Culture • History</span>
-                      <h4 className="text-card-heading text-travel-dark mt-1 group-hover:text-[#16A34A] transition-colors">Rajasthan Heritage</h4>
+                      <span className="text-[12px] uppercase font-medium text-roamio-primary-accent">Culture • History</span>
+                      <h4 className="text-card-heading text-travel-dark mt-1 group-hover:text-roamio-primary-accent transition-colors">Rajasthan Heritage</h4>
                       <p className="text-small-custom text-[#6B7280] leading-relaxed mt-1">Hill forts of Jaipur and lake palaces of Udaipur.</p>
                     </div>
                     <div className="flex items-center justify-between pt-3 text-small-custom font-semibold text-[#6B7280] border-t border-travel-borders/60 mt-3">
@@ -1625,8 +1625,8 @@ export default function PlannerPage({
               {/* DASHED PLACEHOLDERS */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4 w-full">
                 {/* Map placeholder */}
-                <div className="border-2 border-dashed border-travel-borders rounded-3xl p-8 flex flex-col items-center justify-center text-center bg-white min-h-[260px] hover:border-[#16A34A] hover:bg-emerald-50/5 hover:shadow-premium-hover transition-all duration-300 group">
-                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 mb-4 group-hover:bg-emerald-50 group-hover:border-emerald-100 transition-colors">
+                <div className="border-2 border-dashed border-travel-borders rounded-3xl p-8 flex flex-col items-center justify-center text-center bg-white min-h-[260px] hover:border-roamio-primary-accent hover:bg-roamio-primary-accent/5 hover:shadow-premium-hover transition-all duration-300 group">
+                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 mb-4 group-hover:bg-roamio-primary-accent/10 group-hover:border-roamio-primary-accent/20 transition-colors">
                     <Map className="h-10 w-10 text-[#6B7280]/70" />
                   </div>
                   <h4 className="text-[15px] font-black text-travel-dark uppercase tracking-wider">Route Map</h4>
@@ -1634,8 +1634,8 @@ export default function PlannerPage({
                 </div>
 
                 {/* Budget placeholder */}
-                <div className="border-2 border-dashed border-travel-borders rounded-3xl p-8 flex flex-col items-center justify-center text-center bg-white min-h-[260px] hover:border-[#16A34A] hover:bg-emerald-50/5 hover:shadow-premium-hover transition-all duration-300 group">
-                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 mb-4 group-hover:bg-emerald-50 group-hover:border-emerald-100 transition-colors">
+                <div className="border-2 border-dashed border-travel-borders rounded-3xl p-8 flex flex-col items-center justify-center text-center bg-white min-h-[260px] hover:border-roamio-primary-accent hover:bg-roamio-primary-accent/5 hover:shadow-premium-hover transition-all duration-300 group">
+                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 mb-4 group-hover:bg-roamio-primary-accent/10 group-hover:border-roamio-primary-accent/20 transition-colors">
                     <Wallet className="h-10 w-10 text-[#6B7280]/70" />
                   </div>
                   <h4 className="text-[15px] font-black text-travel-dark uppercase tracking-wider">Budget Breakdown</h4>
@@ -1643,8 +1643,8 @@ export default function PlannerPage({
                 </div>
 
                 {/* Itinerary placeholder */}
-                <div className="border-2 border-dashed border-travel-borders rounded-3xl p-8 flex flex-col items-center justify-center text-center bg-white min-h-[260px] hover:border-[#16A34A] hover:bg-emerald-50/5 hover:shadow-premium-hover transition-all duration-300 group">
-                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 mb-4 group-hover:bg-emerald-50 group-hover:border-emerald-100 transition-colors">
+                <div className="border-2 border-dashed border-travel-borders rounded-3xl p-8 flex flex-col items-center justify-center text-center bg-white min-h-[260px] hover:border-roamio-primary-accent hover:bg-roamio-primary-accent/5 hover:shadow-premium-hover transition-all duration-300 group">
+                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 mb-4 group-hover:bg-roamio-primary-accent/10 group-hover:border-roamio-primary-accent/20 transition-colors">
                     <Calendar className="h-10 w-10 text-[#6B7280]/70" />
                   </div>
                   <h4 className="text-[15px] font-black text-travel-dark uppercase tracking-wider">Itinerary Snapshot</h4>
@@ -1652,8 +1652,8 @@ export default function PlannerPage({
                 </div>
 
                 {/* Suggestions placeholder */}
-                <div className="border-2 border-dashed border-travel-borders rounded-3xl p-8 flex flex-col items-center justify-center text-center bg-white min-h-[260px] hover:border-[#16A34A] hover:bg-emerald-50/5 hover:shadow-premium-hover transition-all duration-300 group">
-                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 mb-4 group-hover:bg-emerald-50 group-hover:border-emerald-100 transition-colors">
+                <div className="border-2 border-dashed border-travel-borders rounded-3xl p-8 flex flex-col items-center justify-center text-center bg-white min-h-[260px] hover:border-roamio-primary-accent hover:bg-roamio-primary-accent/5 hover:shadow-premium-hover transition-all duration-300 group">
+                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 mb-4 group-hover:bg-roamio-primary-accent/10 group-hover:border-roamio-primary-accent/20 transition-colors">
                     <Compass className="h-10 w-10 text-[#6B7280]/70" />
                   </div>
                   <h4 className="text-[15px] font-black text-travel-dark uppercase tracking-wider">Discovery Sights</h4>
@@ -1740,7 +1740,7 @@ export default function PlannerPage({
                     key={tab}
                     onClick={() => setActiveTab(tab)}
                     className={`py-2 px-3 text-small-custom font-semibold uppercase border-b-2 tracking-wider whitespace-nowrap transition-colors duration-150 cursor-pointer ${activeTab === tab
-                      ? 'border-[#16A34A] text-[#16A34A]'
+                      ? 'border-roamio-primary-accent text-roamio-primary-accent'
                       : 'border-transparent text-[#6B7280] hover:text-travel-text-primary'
                       }`}
                   >
@@ -1832,10 +1832,10 @@ export default function PlannerPage({
                       <div className="xl:col-span-4 flex flex-col justify-between gap-4 text-left w-full min-w-0">
 
                         {/* Budget card with soft green background (premium feel, not oversaturated) */}
-                        <div className="bg-[#FFFFFF] border border-emerald-200 rounded-xl p-4 sm:p-5 lg:p-6 shadow-premium flex-1 flex flex-col justify-between w-full min-w-0">
+                        <div className="bg-[#FFFFFF] border border-roamio-primary-accent/20 rounded-xl p-4 sm:p-5 lg:p-6 shadow-premium flex-1 flex flex-col justify-between w-full min-w-0">
                           <div className="flex items-center justify-between mb-3">
-                            <h3 className="text-small-custom font-semibold text-emerald-800 uppercase tracking-wider">Budget Breakdown</h3>
-                            <div className="h-2 w-2 rounded-full bg-[#16A34A] animate-pulse" />
+                            <h3 className="text-small-custom font-semibold text-roamio-text-primary uppercase tracking-wider">Budget Breakdown</h3>
+                            <div className="h-2 w-2 rounded-full bg-roamio-primary-accent animate-pulse" />
                           </div>
 
                           {drawDonutChart()}
@@ -1852,14 +1852,14 @@ export default function PlannerPage({
                         <div className="bg-white border border-travel-borders rounded-xl p-4 shadow-xs flex-1 flex flex-col justify-between">
                           <div>
                             <div className="flex items-center gap-1.5 mb-3">
-                              <Sparkles className="h-4 w-4 text-[#16A34A]" />
+                              <Sparkles className="h-4 w-4 text-roamio-primary-accent" />
                               <h3 className="text-small-custom font-semibold text-travel-text-primary uppercase tracking-wider">AI Recommendations</h3>
                             </div>
 
                             <div className="space-y-2 max-h-32 overflow-y-auto">
                               {recommendations.map((rec, idx) => (
                                 <div key={idx} className="flex gap-2 items-start text-small-custom font-normal leading-relaxed">
-                                  {rec.type === 'success' && <Check className="h-3 w-3 text-[#16A34A] shrink-0 mt-0.5" />}
+                                  {rec.type === 'success' && <Check className="h-3 w-3 text-roamio-primary-accent shrink-0 mt-0.5" />}
                                   {rec.type === 'warning' && <AlertTriangle className="h-3 w-3 text-amber-500 shrink-0 mt-0.5" />}
                                   {rec.type === 'info' && <Compass className="h-3 w-3 text-blue-500 shrink-0 mt-0.5" />}
                                   <span className="text-travel-text-secondary">{rec.text}</span>
@@ -1876,12 +1876,12 @@ export default function PlannerPage({
                     <div className="space-y-3 pt-2 text-left">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <Compass className="h-5 w-5 text-[#16A34A]" />
+                          <Compass className="h-5 w-5 text-roamio-primary-accent" />
                           <h2 className="text-section-heading text-travel-text-primary uppercase tracking-wider">AI Nearby Discovery Suggestions</h2>
                         </div>
                         <button
                           onClick={() => setActiveTab('Attractions')}
-                          className="text-small-custom font-semibold text-[#16A34A] hover:underline uppercase"
+                          className="text-small-custom font-semibold text-roamio-primary-accent hover:underline uppercase"
                         >
                           View All Suggestions
                         </button>
@@ -1919,7 +1919,7 @@ export default function PlannerPage({
                                 className={`absolute top-2.5 right-2.5 p-1.5 rounded-full border shadow-md active:scale-90 transition-all duration-150 flex items-center justify-center z-20 cursor-pointer ${isAdded
                                   ? hoveredDiscoveryIdx === idx
                                     ? 'bg-red-500 text-white border-red-500'
-                                    : 'bg-[#16A34A] text-white border-[#16A34A]'
+                                    : 'bg-roamio-primary-accent text-white border-roamio-primary-accent'
                                   : 'bg-white/95 text-travel-text-primary border-travel-borders hover:bg-white hover:border-black'
                                   }`}
                                 title={isAdded ? "Remove Stop" : "Add Stop"}
@@ -1973,7 +1973,7 @@ export default function PlannerPage({
                             className="bg-white border border-travel-borders rounded-xl p-4 shadow-xs w-64 shrink-0 flex flex-col justify-between"
                           >
                             <div>
-                              <span className="text-small-custom font-semibold text-[#16A34A] block">Day {day.day}</span>
+                              <span className="text-small-custom font-semibold text-roamio-primary-accent block">Day {day.day}</span>
                               <h4 className="text-card-heading text-travel-text-primary mt-1 truncate leading-tight font-semibold">
                                 {day.title}
                               </h4>
@@ -1981,7 +1981,7 @@ export default function PlannerPage({
                               <ul className="mt-3.5 space-y-2">
                                 {day.activities.slice(0, 3).map((act, aIdx) => (
                                   <li key={aIdx} className="flex gap-2 items-start text-small-custom font-normal text-travel-text-secondary leading-normal">
-                                    <span className="h-1.5 w-1.5 rounded-full bg-[#16A34A] mt-1.5 shrink-0" />
+                                    <span className="h-1.5 w-1.5 rounded-full bg-roamio-primary-accent mt-1.5 shrink-0" />
                                     <span className="line-clamp-2">{act}</span>
                                   </li>
                                 ))}
@@ -1996,13 +1996,13 @@ export default function PlannerPage({
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 text-left">
                       {/* Weather outlook */}
                       <div className="bg-white border border-travel-borders p-4 rounded-xl shadow-xs flex items-center gap-4">
-                        <CloudRain className="h-8 w-8 text-[#16A34A] shrink-0" />
+                        <CloudRain className="h-8 w-8 text-roamio-primary-accent shrink-0" />
                         <div>
                           <h4 className="text-card-heading text-travel-text-primary uppercase tracking-wider font-semibold">Weather Outlook</h4>
                           <p className="text-small-custom text-[#6B7280] mt-0.5">{getDestinationOverviewInfo(destination).weather}</p>
                           <button
                             onClick={() => setActiveTab('Tips')}
-                            className="text-small-custom font-semibold text-[#16A34A] hover:underline uppercase mt-1.5 block cursor-pointer"
+                            className="text-small-custom font-semibold text-roamio-primary-accent hover:underline uppercase mt-1.5 block cursor-pointer"
                           >
                             View Details &rarr;
                           </button>
@@ -2011,13 +2011,13 @@ export default function PlannerPage({
 
                       {/* Packing suggestions */}
                       <div className="bg-white border border-travel-borders p-4 rounded-xl shadow-xs flex items-center gap-4">
-                        <Briefcase className="h-8 w-8 text-[#16A34A] shrink-0" />
+                        <Briefcase className="h-8 w-8 text-roamio-primary-accent shrink-0" />
                         <div>
                           <h4 className="text-card-heading text-travel-text-primary uppercase tracking-wider font-semibold">Packing Suggestions</h4>
                           <p className="text-small-custom text-[#6B7280] mt-0.5">{getDestinationOverviewInfo(destination).packing}</p>
                           <button
                             onClick={() => setActiveTab('Packing List')}
-                            className="text-small-custom font-semibold text-[#16A34A] hover:underline uppercase mt-1.5 block cursor-pointer"
+                            className="text-small-custom font-semibold text-roamio-primary-accent hover:underline uppercase mt-1.5 block cursor-pointer"
                           >
                             View List &rarr;
                           </button>
@@ -2026,13 +2026,13 @@ export default function PlannerPage({
 
                       {/* Safety & tips */}
                       <div className="bg-white border border-travel-borders p-4 rounded-xl shadow-xs flex items-center gap-4">
-                        <ShieldAlert className="h-8 w-8 text-[#16A34A] shrink-0" />
+                        <ShieldAlert className="h-8 w-8 text-roamio-primary-accent shrink-0" />
                         <div>
                           <h4 className="text-card-heading text-travel-text-primary uppercase tracking-wider font-semibold">Safety & Tips</h4>
                           <p className="text-small-custom text-[#6B7280] mt-0.5">{getDestinationOverviewInfo(destination).safety}</p>
                           <button
                             onClick={() => setActiveTab('Tips')}
-                            className="text-small-custom font-semibold text-[#16A34A] hover:underline uppercase mt-1.5 block cursor-pointer"
+                            className="text-small-custom font-semibold text-roamio-primary-accent hover:underline uppercase mt-1.5 block cursor-pointer"
                           >
                             View Tips &rarr;
                           </button>
@@ -2170,10 +2170,10 @@ export default function PlannerPage({
 
                     <div className="space-y-6">
                       {daywiseDays.map((day, idx) => (
-                        <div key={idx} className="relative border-l-2 border-[#16A34A] pl-4 py-1">
-                          <span className="absolute -left-[9px] top-1 h-4.5 w-4.5 rounded-full bg-[#16A34A] border-4 border-white shadow-sm" />
+                        <div key={idx} className="relative border-l-2 border-roamio-primary-accent pl-4 py-1">
+                          <span className="absolute -left-[9px] top-1 h-4.5 w-4.5 rounded-full bg-roamio-primary-accent border-4 border-white shadow-sm" />
                           <div className="mb-2">
-                            <span className="text-small-custom font-semibold text-[#16A34A]">Day {day.day}</span>
+                            <span className="text-small-custom font-semibold text-roamio-primary-accent">Day {day.day}</span>
                             <h4 className="text-card-heading text-travel-dark mt-0.5 font-semibold">{day.title}</h4>
                           </div>
 
@@ -2588,7 +2588,7 @@ export default function PlannerPage({
                                 <input
                                   type="checkbox"
                                   defaultChecked={itemObj.checked}
-                                  className="rounded border-travel-borders text-[#16A34A] focus:ring-[#16A34A]"
+                                  className="rounded border-travel-borders text-roamio-primary-accent focus:ring-roamio-primary-accent"
                                 />
                                 <span>{itemObj.item}</span>
                               </li>
@@ -2604,7 +2604,7 @@ export default function PlannerPage({
                                 <input
                                   type="checkbox"
                                   defaultChecked={itemObj.checked}
-                                  className="rounded border-travel-borders text-[#16A34A] focus:ring-[#16A34A]"
+                                  className="rounded border-travel-borders text-roamio-primary-accent focus:ring-roamio-primary-accent"
                                 />
                                 <span>{itemObj.item}</span>
                               </li>
@@ -2622,7 +2622,7 @@ export default function PlannerPage({
                 <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
 
                   <div className="flex items-center gap-3 shrink-0">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#16A34A] text-white font-black">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-roamio-primary-accent text-white font-black">
                       🛒
                     </span>
                     <div className="text-left font-body">
@@ -2638,7 +2638,7 @@ export default function PlannerPage({
                         key={idx}
                         className="bg-travel-bg-soft border border-travel-borders hover:border-black rounded-lg px-2.5 py-1 text-small-custom font-semibold text-travel-text-primary flex items-center gap-1.5 shrink-0 transition"
                       >
-                        <span className="text-[#16A34A]">{idx + 1}</span>
+                        <span className="text-roamio-primary-accent">{idx + 1}</span>
                         <span className="truncate max-w-[100px]">{place.name.split(' (')[0]}</span>
                         <button
                           onClick={() => onRemovePlace(place)}

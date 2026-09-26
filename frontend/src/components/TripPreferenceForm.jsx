@@ -19,8 +19,6 @@ export default function TripPreferenceForm({ onSubmit, loading, isRegenerate = f
     allowInternationalTransit: false,
   });
 
-  });
-
   const placeTypeOptions = [
     { id: 'mountains', label: 'Mountains', emoji: '🏔️' },
     { id: 'beaches', label: 'Beaches', emoji: '🏖️' },

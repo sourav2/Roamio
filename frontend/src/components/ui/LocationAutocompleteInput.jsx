@@ -8,7 +8,7 @@ import { travelApi } from '../../services/api';
  * 
  * Extracted reusable pattern from TripPreferenceForm and PlannerPage.
  * Preserves Nominatim OSM connection while strictly enforcing Roamio Design System tokens:
- * - Borders: Border Light (#DEDEDE), Focus: Primary Accent (#164A3A)
+ * - Borders: Border Light (#DEDEDE), Focus: Primary Accent (#176B53)
  * - Elevation: Medium Drop Shadow on dropdown list
  * - Hover: Secondary Background (#F8F6F0)
  * - Radius: 8px (Radius 2)

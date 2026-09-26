@@ -9,7 +9,7 @@ import RoamioFilters from './filters/RoamioFilters';
  */
 export default function FiltersPanel({
   title = "Filters",
-  submitLabel = "Submit",
+  submitLabel = "Find Destination",
   isCard = true,
   className = "",
   initialValues,

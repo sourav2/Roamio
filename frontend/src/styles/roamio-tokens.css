@@ -31,7 +31,7 @@
   --roamio-text-tertiary: #949494;
   --roamio-text-disabled: #BDBDBD;
   --roamio-text-inverse: #F8F6F0;
-  --roamio-text-highlight: #164A3A;
+  --roamio-text-highlight: #176B53;
 
   /* BORDERS */
   --roamio-border-light: #DEDEDE;
@@ -51,8 +51,8 @@
   --roamio-semantic-info-bg: #EEF8FA;
 
   /* PRIMARY ACCENT */
-  --roamio-primary-accent: #164A3A;
-  --roamio-primary-accent-hover: #0E3227;
+  --roamio-primary-accent: #176B53;
+  --roamio-primary-accent-hover: #00513D;
 
   /* LIGHT BUTTON */
   --roamio-btn-light: #46B392;

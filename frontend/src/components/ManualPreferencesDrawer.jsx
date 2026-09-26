@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
 import Drawer from './ui/Drawer';
-import Button from './ui/Button';
 import RoamioFilters from './filters/RoamioFilters';
 
 /**
@@ -16,21 +15,11 @@ export default function ManualPreferencesDrawer({
   initialValues,
 }) {
   const filtersRef = useRef(null);
-  const [canSubmit, setCanSubmit] = React.useState(true);
+  const [, setCanSubmit] = React.useState(true);
 
   const handleReset = () => {
     if (filtersRef.current) {
       filtersRef.current.reset();
-    }
-  };
-
-  const handleSearchTrigger = () => {
-    if (!canSubmit) {
-      console.warn('[ManualPreferencesDrawer] Search blocked: selection required');
-      return;
-    }
-    if (filtersRef.current) {
-      filtersRef.current.submit();
     }
   };
 
@@ -45,7 +34,7 @@ export default function ManualPreferencesDrawer({
       isOpen={isOpen}
       onClose={onClose}
       placement="right"
-      width="w-full sm:w-[380px]"
+      width="w-full sm:w-[400px]"
       showCloseButton={false}
       header={
         <div className="flex items-center justify-between px-roamio-6 py-roamio-5 border-b border-roamio-divider bg-white shrink-0">
@@ -62,30 +51,13 @@ export default function ManualPreferencesDrawer({
         </div>
       }
       bodyClassName="px-roamio-6 py-roamio-5 bg-white"
-      footerClassName="p-roamio-6 bg-white border-t border-roamio-border-light shrink-0"
-      footer={
-        <div className="space-y-2">
-          <Button
-            variant="primary"
-            isFullWidth
-            disabled={!canSubmit}
-            onClick={handleSearchTrigger}
-          >
-            Search
-          </Button>
-          {!canSubmit && (
-            <p className="text-xs text-roamio-semantic-warning text-center font-medium">
-              Please select from the dropdown suggestions to search
-            </p>
-          )}
-        </div>
-      }
     >
       <RoamioFilters
         ref={filtersRef}
         layout="plain"
         showHeader={false}
-        showSubmit={false}
+        showSubmit={true}
+        submitLabel="Find Destination"
         initialValues={initialValues}
         onSubmit={handleFiltersSubmit}
         onValidityChange={setCanSubmit}

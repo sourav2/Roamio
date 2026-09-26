@@ -528,8 +528,13 @@ export default function App() {
     else if (page === 'destination') {
       let destId = '';
       let destData = null;
+      const makeSafeSlug = (str) => {
+        if (!str || typeof str !== 'string') return 'destination';
+        return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      };
+
       if (typeof param === 'object' && param !== null) {
-        destId = param.id || param.name || 'destination';
+        destId = param.id || makeSafeSlug(param.name) || 'destination';
         destData = param;
       } else if (typeof param === 'string' && param) {
         destId = param;
@@ -991,11 +996,11 @@ export default function App() {
           <button
             type="button"
             onClick={() => setIsCartOpen(true)}
-            className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-emerald-600 hover:bg-emerald-700 text-white shadow-2xl transition duration-300 active:scale-95 border border-white/10"
+            className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-roamio-primary-accent hover:bg-roamio-primary-hover text-white shadow-2xl transition duration-300 active:scale-95 border border-white/10"
           >
             <Compass className="h-6.5 w-6.5 animate-spin-slow group-hover:scale-110" />
             {selectedPlaces.length > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 border-2 border-white text-3xs font-black text-white shadow-md animate-bounce">
+              <span className="absolute -top-1.5 -right-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-roamio-btn-light border-2 border-white text-3xs font-black text-white shadow-md animate-bounce">
                 {selectedPlaces.length}
               </span>
             )}

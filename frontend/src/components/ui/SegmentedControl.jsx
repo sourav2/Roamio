@@ -9,7 +9,7 @@ import React from 'react';
  * 
  * Strict Roamio Design System implementation:
  * - Container: Secondary Background (#F8F6F0), Border Light (#DEDEDE), Radius 2 (8px)
- * - Active Segment: Primary Accent (#164A3A), Text Inverse (#F8F6F0 / #FFFFFF), Drop Shadow Small
+ * - Active Segment: Primary Accent (#176B53), Text Inverse (#F8F6F0 / #FFFFFF), Drop Shadow Small
  * - Inactive Segment: Text Secondary (#5B6660), Hover: Text Primary (#1C2420)
  */
 export default function SegmentedControl({

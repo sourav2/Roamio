@@ -3,19 +3,24 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Compass } from 'lucide-react';
 import { LOCAL_PRESETS, geocodingService } from '../../services/maps/geocodingService';
+import { MapChipController } from '../../services/maps/mapChipCollision';
 
 /**
  * DiscoveryMap component reusing Leaflet and Esri topographic layers.
- * Shows regional discovery destinations with connecting routes and custom legend.
+ * Shows regional discovery destinations with connecting routes, collision-aware chips, and custom legend.
  */
 export default function DiscoveryMap({
   startLocation = null,
   startCoords = null,
   destinations = [],
   className = '',
+  onSelect = null,
+  onHover = null,
 }) {
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
+  const chipControllerRef = useRef(null);
+  const routeLayerGroupRef = useRef(null);
   const [asyncStartCoords, setAsyncStartCoords] = useState(null);
 
   // Synchronous resolution of origin coordinates using explicit startCoords or existing LOCAL_PRESETS
@@ -81,24 +86,34 @@ export default function DiscoveryMap({
       // Add zoom control to bottom right
       L.control.zoom({ position: 'bottomright' }).addTo(map);
 
+      routeLayerGroupRef.current = L.layerGroup().addTo(map);
+      chipControllerRef.current = new MapChipController(map, {
+        onPreviewClick: onSelect,
+        onSelect,
+        onHover,
+      });
+
       mapInstanceRef.current = map;
     }
 
+    if (chipControllerRef.current) {
+      chipControllerRef.current.onPreviewClick = onSelect;
+      chipControllerRef.current.onSelect = onSelect;
+      chipControllerRef.current.onHover = onHover;
+    }
+
     const map = mapInstanceRef.current;
-    
-    // Clear previous vector layers
-    map.eachLayer((layer) => {
-      if (layer instanceof L.Marker || layer instanceof L.Polyline || layer instanceof L.CircleMarker) {
-        map.removeLayer(layer);
-      }
-    });
+    const routeLayer = routeLayerGroupRef.current;
+    if (routeLayer) {
+      routeLayer.clearLayers();
+    }
 
     const activeDestinations = Array.isArray(destinations) && destinations.length > 0
       ? destinations
       : [];
 
     // 1. Draw dashed suggested routes ONLY IF an explicit starting origin exists and has valid coordinates
-    if (effectiveStartCoords) {
+    if (effectiveStartCoords && routeLayer) {
       activeDestinations.forEach((dest) => {
         if (!dest.coords || dest.isStart) return;
 
@@ -113,43 +128,42 @@ export default function DiscoveryMap({
           opacity: 0.75,
           dashArray: '4, 6',
           lineCap: 'round',
-        }).addTo(map);
+        }).addTo(routeLayer);
       });
-
-      // Add explicit origin marker
-      const startMarkerHtml = `
-        <div style="display:flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; background:#164A3A; border:3px solid white; box-shadow:0 2px 6px rgba(0,0,0,0.3);">
-          <div style="width:8px; height:8px; border-radius:50%; background:#FFFFFF;"></div>
-        </div>
-      `;
-      const startIcon = L.divIcon({
-        html: startMarkerHtml,
-        className: 'discovery-map-marker',
-        iconSize: [28, 28],
-        iconAnchor: [14, 14],
-      });
-      L.marker(effectiveStartCoords, { icon: startIcon }).addTo(map);
     }
 
-    // 2. Add Markers for Destinations
-    activeDestinations.forEach((dest) => {
-      if (!dest.coords || dest.isStart) return;
-
-      const markerHtml = `
-        <div style="display:inline-flex; align-items:center; gap:5px; background:var(--roamio-primary-accent, #164A3A); color:#FFFFFF; padding:3px 8px 3px 6px; border-radius:var(--roamio-radius-1, 4px); box-shadow:0 2px 6px rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.18); width:max-content; max-width:180px; cursor:pointer; font-family:'Inter', sans-serif;">
-          <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:${dest.color || '#2F9E6F'}; flex-shrink:0;"></span>
-          <span style="font-size:11px; font-weight:600; color:#FFFFFF; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; line-height:14px;">${dest.name}</span>
-        </div>
-      `;
-
-      const customIcon = L.divIcon({
-        html: markerHtml,
-        className: 'discovery-map-marker',
-        iconSize: null,
+    // 2. Prepare items for collision-aware chip controller
+    const chipItems = [];
+    if (effectiveStartCoords) {
+      chipItems.push({
+        id: 'user_origin',
+        name: startLocation || 'Your Location',
+        coords: effectiveStartCoords,
+        isOrigin: true,
+        isStart: true,
       });
+    }
 
-      L.marker(dest.coords, { icon: customIcon }).addTo(map);
+    activeDestinations.forEach((dest, idx) => {
+      if (!dest.coords || dest.isStart) return;
+      chipItems.push({
+        id: dest.id || `dest_${idx}`,
+        name: dest.name,
+        coords: dest.coords,
+        color: dest.color || '#2F9E6F',
+        description: dest.description || dest.interests,
+        travelTime: dest.travelTime,
+        budget: dest.budget,
+        weather: dest.weather,
+        image: dest.image,
+        priority: 50 + (activeDestinations.length - idx),
+        ...dest,
+      });
     });
+
+    if (chipControllerRef.current) {
+      chipControllerRef.current.setItems(chipItems);
+    }
 
     // 3. Dynamically fit map bounds to frame active markers
     const boundsCoords = [];
@@ -169,7 +183,18 @@ export default function DiscoveryMap({
       map.setView(boundsCoords[0], 9);
     }
 
-  }, [effectiveStartCoords, startLocation, destinations]);
+    // Delay slight recalculation after fitBounds animation
+    const recheckTimer = setTimeout(() => {
+      if (chipControllerRef.current) {
+        chipControllerRef.current.handleMapMove();
+      }
+    }, 250);
+
+    return () => {
+      clearTimeout(recheckTimer);
+    };
+
+  }, [effectiveStartCoords, startLocation, destinations, onSelect, onHover]);
 
   return (
     <div className={`relative w-full h-[400px] sm:h-[440px] rounded-roamio-3 overflow-hidden border border-roamio-border-light bg-[#F0EFEA] ${className}`.trim()}>
@@ -182,7 +207,7 @@ export default function DiscoveryMap({
         <div className="space-y-1.5 text-[10.5px] font-medium text-roamio-text-primary">
           {effectiveStartCoords && (
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#164A3A] border border-white shadow-2xs shrink-0" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#176B53] border border-white shadow-2xs shrink-0" />
               <span>Your Location</span>
             </div>
           )}
